@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Primary SEO -->
+<title>Studio Tantra — AI Ad Production for Indian Regional-Language Campaigns</title>
+<meta name="description" content="A 6-agent AI workflow that produces character-consistent ad creatives in Telugu, Tamil, Hindi, Marathi, Bangla and English. Built for Indian creative shops and D2C brands. Per-asset pricing, 18-hour delivery." />
+<meta name="keywords" content="AI ad production India, regional language ad creative, Telugu video ads, Tamil ad generator, Indian D2C creative agency, character consistency AI video, AI agent media pipeline, ad creative automation Hyderabad" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://studiotantra.example/" />
+
+<!-- Open Graph + Twitter -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Studio Tantra — AI Ad Production for Indian Regional-Language Campaigns" />
+<meta property="og:description" content="6 specialist AI agents. One critique gate. 18-hour delivery. Built for Hyderabad and Bengaluru creative shops serving regional-language D2C brands." />
+<meta property="og:locale" content="en_IN" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Studio Tantra — AI Ad Production for India's Regional Languages" />
+<meta name="twitter:description" content="6 specialist AI agents. One critique gate. 18-hour delivery." />
+
+<!-- Structured data for AI discovery -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "name": "Studio Tantra",
+      "alternateName": "Studio Tantra AI",
+      "description": "An AI-agent-led ad production platform for Indian creative shops, with character consistency and regional-language dub built in.",
+      "foundingDate": "2026",
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "knowsLanguage": ["en", "te", "ta", "hi", "mr", "bn", "kn"],
+      "email": "uday.kr27@gmail.com"
+    },
+    {
+      "@type": "Service",
+      "name": "AI Ad Creative Production",
+      "serviceType": "AI-assisted advertising creative production",
+      "provider": { "@type": "Organization", "name": "Studio Tantra" },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Creative shops, ad agencies, and D2C brands"
+      },
+      "areaServed": { "@type": "Country", "name": "India" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does Studio Tantra do?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Studio Tantra produces ad creatives using six specialist AI agents that handle brief parsing, character identity locking, scene rendering, multilingual voice and dub, editing, and quality critique. Built for Indian creative shops serving regional-language D2C brands."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which Indian languages does Studio Tantra support?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "At launch: English, Hindi, Telugu, Tamil. Marathi, Bangla, and Kannada follow in subsequent quarters."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How much does it cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Per-asset pricing from approximately INR 250 per finished asset for the Studio tier, with monthly credit packs starting at INR 4,999 for the Starter tier. Final pricing is confirmed during pilot onboarding."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How long does delivery take?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Standard turnaround is 18 hours from approved brief to delivered assets. Same-day rush is available for Agency tier customers."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who is Studio Tantra for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Creative shops and digital ad agencies of 5 to 25 people, primarily in Hyderabad and Bengaluru, serving D2C brands that need regional-language ad creative at scale."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=GT+Sectra:wght@400;700&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --ink-2: #1f1f1f;
+    --ink-3: #525252;
+    --ink-4: #737373;
+    --paper: #fafaf7;
+    --paper-2: #f0ede4;
+    --paper-3: #e6e1d2;
+    --accent: #d97706;
+    --accent-deep: #92400e;
+    --accent-soft: #fef3c7;
+    --good: #166534;
+    --rule: #1a1a1a;
+    --font-display: 'GT Sectra', Georgia, serif;
+    --font-body: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+    --font-accent: 'Instrument Serif', serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--font-body); font-size: 16px; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Subtle paper grain */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Reveal animation utility */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+  .reveal-delay-4 { transition-delay: 0.32s; }
+  .reveal-delay-5 { transition-delay: 0.40s; }
+  .reveal-delay-6 { transition-delay: 0.48s; }
+
+  /* Nav */
+  nav.top {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    background: rgba(250, 250, 247, 0.78);
+    border-bottom: 1px solid transparent;
+    transition: border-bottom-color 0.3s ease, background 0.3s ease;
+  }
+  nav.top.scrolled {
+    border-bottom-color: var(--paper-3);
+    background: rgba(250, 250, 247, 0.92);
+  }
+  nav.top .inner {
+    max-width: 1100px; margin: 0 auto; padding: 18px 28px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  nav.top .logo {
+    font-family: var(--font-display); font-size: 22px;
+    text-decoration: none; color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  nav.top .logo .pre {
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--accent-deep); font-weight: 600;
+  }
+  nav.top .logo em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent);
+  }
+  nav.top .links {
+    display: flex; gap: 32px; align-items: center;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+  }
+  nav.top .links a {
+    color: var(--ink-3); text-decoration: none;
+    transition: color 0.2s ease;
+  }
+  nav.top .links a:hover { color: var(--accent-deep); }
+  nav.top .links .cta {
+    background: var(--ink); color: var(--paper);
+    padding: 10px 18px;
+    transition: background 0.2s ease;
+  }
+  nav.top .links .cta:hover { background: var(--accent); color: white; }
+  @media (max-width: 720px) {
+    nav.top .links a:not(.cta) { display: none; }
+  }
+
+  /* Hero */
+  .hero {
+    padding: 180px 28px 120px;
+    max-width: 1100px; margin: 0 auto;
+    position: relative; z-index: 1;
+  }
+  .hero .eyebrow {
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--accent-deep);
+    margin-bottom: 28px;
+    display: inline-flex; align-items: center; gap: 10px;
+  }
+  .hero .eyebrow .pulse {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 0 var(--accent);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0.5); }
+    70% { box-shadow: 0 0 0 12px rgba(217, 119, 6, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(217, 119, 6, 0); }
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 8vw, 96px);
+    line-height: 0.96;
+    letter-spacing: -0.03em;
+    margin: 0 0 36px;
+    font-weight: 400;
+    max-width: 980px;
+  }
+  .hero h1 em {
+    font-family: var(--font-accent); font-style: italic;
+    color: var(--accent); font-weight: 400;
+  }
+  .hero h1 .strike {
+    position: relative;
+    display: inline-block;
+    color: var(--ink-4);
+  }
+  .hero h1 .strike::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; top: 52%;
+    height: 4px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: strike 1.2s 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes strike {
+    to { transform: scaleX(1); }
+  }
+  .hero .lede {
+    font-family: var(--font-display); font-size: clamp(20px, 2.4vw, 26px);
+    line-height: 1.4; max-width: 720px; color: var(--ink-2);
+    font-weight: 400; margin: 0 0 48px;
+  }
+  .hero .ctas { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .hero .cta-primary {
+    background: var(--ink); color: var(--paper);
+    padding: 18px 28px; text-decoration: none;
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 600;
+    transition: background 0.25s ease, transform 0.25s ease;
+    display: inline-flex; align-items: center; gap: 12px;
+  }
+  .hero .cta-primary:hover {
+    background: var(--accent); transform: translateY(-2px);
+  }
+  .hero .cta-primary .arr {
+    transition: transform 0.25s ease;
+  }
+  .hero .cta-primary:hover .arr { transform: translateX(4px); }
+  .hero .cta-secondary {
+    color: var(--ink-2); text-decoration: none;
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    padding: 18px 4px;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease, color 0.2s ease;
+  }
+  .hero .cta-secondary:hover { border-bottom-color: var(--accent); color: var(--accent-deep); }
+
+  /* Status strip */
+  .status-strip {
+    border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    padding: 16px 28px;
+    background: var(--ink); color: var(--paper);
+    overflow: hidden;
+  }
+  .status-strip .scroll {
+    display: flex; gap: 60px;
+    animation: scroll 40s linear infinite;
+    width: max-content;
+    font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase;
+  }
+  .status-strip .scroll span { white-space: nowrap; }
+  .status-strip .scroll span em {
+    font-family: var(--font-accent); font-style: italic;
+    color: var(--accent); text-transform: none; letter-spacing: 0;
+    font-size: 14px;
+  }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Section base */
+  section { padding: 120px 28px; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+  .section-num {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.25em;
+    color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 14px;
+  }
+  h2 {
+    font-family: var(--font-display); font-size: clamp(36px, 5vw, 60px);
+    line-height: 1.02; letter-spacing: -0.025em; margin: 0 0 36px;
+    font-weight: 400; max-width: 880px;
+  }
+  h2 em { font-family: var(--font-accent); font-style: italic; color: var(--accent); }
+  h3 {
+    font-family: var(--font-body); font-weight: 600; font-size: 19px;
+    letter-spacing: -0.01em; margin: 0 0 12px;
+  }
+  p { margin: 0 0 16px; max-width: 720px; }
+  p strong { color: var(--ink); font-weight: 600; }
+
+  /* Problem split */
+  .problem-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1px;
+    background: var(--rule); border: 1px solid var(--rule);
+    margin-top: 48px;
+  }
+  @media (max-width: 760px) { .problem-grid { grid-template-columns: 1fr; } }
+  .problem-cell {
+    background: var(--paper); padding: 40px 36px;
+    min-height: 260px;
+  }
+  .problem-cell.contrast { background: var(--ink); color: var(--paper); }
+  .problem-cell .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; opacity: 0.7;
+    margin-bottom: 24px;
+  }
+  .problem-cell h3 {
+    font-family: var(--font-display); font-size: 30px;
+    line-height: 1.15; letter-spacing: -0.015em;
+    font-weight: 400; margin-bottom: 20px;
+  }
+  .problem-cell h3 em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent);
+  }
+  .problem-cell p { font-size: 15px; line-height: 1.6; }
+  .problem-cell ul {
+    padding-left: 18px; margin-top: 18px;
+    font-family: var(--font-mono); font-size: 12px; line-height: 2;
+    color: var(--ink-3);
+  }
+  .problem-cell.contrast ul { color: rgba(250,250,247,0.75); }
+  .problem-cell ul li::marker { color: var(--accent); }
+
+  /* Agents row — interactive */
+  .agents-row {
+    display: grid; grid-template-columns: repeat(6, 1fr);
+    gap: 8px; margin-top: 48px;
+  }
+  @media (max-width: 800px) { .agents-row { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
+  @media (max-width: 480px) { .agents-row { grid-template-columns: repeat(2, 1fr); } }
+  .agent-card {
+    background: var(--paper-2);
+    border: 1px solid var(--paper-3);
+    padding: 24px 18px;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .agent-card:hover {
+    background: var(--ink); color: var(--paper);
+    border-color: var(--ink);
+    transform: translateY(-4px);
+  }
+  .agent-card svg .agent-stroke { transition: stroke 0.3s ease; }
+  .agent-card svg .agent-fill { transition: fill 0.3s ease; }
+  .agent-card:hover svg .agent-stroke { stroke: var(--paper); }
+  .agent-card .num {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
+    color: var(--accent); margin-bottom: 14px;
+  }
+  .agent-card svg { display: block; margin-bottom: 14px; }
+  .agent-card .name {
+    font-family: var(--font-display); font-size: 17px;
+    letter-spacing: -0.005em; margin-bottom: 6px;
+  }
+  .agent-card .role {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.05em; opacity: 0.7;
+    line-height: 1.5;
+  }
+  .agent-card.critique {
+    border-color: var(--accent-deep);
+    background: var(--accent-soft);
+  }
+  .agent-card.critique .num { color: var(--accent-deep); }
+
+  /* How it works — flow */
+  .flow {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px;
+    margin-top: 48px;
+    background: var(--rule); border: 1px solid var(--rule);
+  }
+  @media (max-width: 800px) { .flow { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .flow { grid-template-columns: 1fr; } }
+  .flow-step {
+    background: var(--paper); padding: 28px 22px;
+    position: relative;
+  }
+  .flow-step .step-num {
+    font-family: var(--font-mono); font-size: 28px; line-height: 1;
+    color: var(--accent); font-weight: 300;
+    margin-bottom: 16px;
+  }
+  .flow-step h4 {
+    font-family: var(--font-display); font-size: 19px;
+    line-height: 1.2; letter-spacing: -0.005em;
+    margin: 0 0 8px; font-weight: 400;
+  }
+  .flow-step p {
+    font-size: 13px; line-height: 1.5; color: var(--ink-2);
+  }
+  .flow-step .meta {
+    font-family: var(--font-mono); font-size: 10px;
+    color: var(--ink-3); margin-top: 14px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Numbers band */
+  .numbers {
+    background: var(--ink); color: var(--paper);
+    padding: 100px 28px;
+    margin: 80px 0 0;
+    position: relative; z-index: 1;
+  }
+  .numbers .inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 36px;
+  }
+  @media (max-width: 800px) { .numbers .inner { grid-template-columns: 1fr 1fr; gap: 48px; } }
+  .numbers .stat .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: rgba(250,250,247,0.6);
+    margin-bottom: 14px;
+  }
+  .numbers .stat .value {
+    font-family: var(--font-display); font-size: clamp(40px, 5vw, 64px);
+    line-height: 1; letter-spacing: -0.02em;
+    margin-bottom: 8px; font-weight: 400;
+  }
+  .numbers .stat .value em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent);
+  }
+  .numbers .stat .desc {
+    font-size: 13px; color: rgba(250,250,247,0.7);
+    line-height: 1.4;
+  }
+
+  /* Languages */
+  .lang-row {
+    margin-top: 40px;
+    display: flex; flex-wrap: wrap; gap: 0;
+    border: 1px solid var(--rule);
+  }
+  .lang {
+    flex: 1 1 140px;
+    padding: 24px 18px;
+    border-right: 1px solid var(--paper-3);
+    background: var(--paper);
+    transition: background 0.3s ease;
+    position: relative;
+  }
+  .lang:last-child { border-right: none; }
+  .lang:hover { background: var(--accent-soft); }
+  .lang .native {
+    font-family: var(--font-display); font-size: 26px;
+    line-height: 1; margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .lang .name {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .lang .status {
+    margin-top: 12px;
+    font-family: var(--font-mono); font-size: 9px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--good);
+  }
+  .lang .status.q3 { color: var(--accent-deep); }
+  .lang .status.q4 { color: var(--ink-3); }
+
+  /* FAQ */
+  .faq-list { margin-top: 40px; }
+  details.faq {
+    border-bottom: 1px solid var(--paper-3);
+    padding: 24px 0;
+    cursor: pointer;
+  }
+  details.faq summary {
+    list-style: none;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--font-display); font-size: 22px;
+    letter-spacing: -0.01em; line-height: 1.3;
+    font-weight: 400;
+    user-select: none;
+  }
+  details.faq summary::-webkit-details-marker { display: none; }
+  details.faq summary .plus {
+    font-family: var(--font-mono); font-size: 18px;
+    color: var(--accent); transition: transform 0.3s ease;
+    margin-left: 16px;
+  }
+  details.faq[open] summary .plus { transform: rotate(45deg); }
+  details.faq .answer {
+    margin-top: 16px;
+    font-size: 16px; line-height: 1.6; color: var(--ink-2);
+    max-width: 720px;
+    animation: fadeIn 0.4s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Contact */
+  .contact-wrap {
+    background: var(--paper-2);
+    padding: 80px 28px;
+    margin-top: 80px;
+    border-top: 1px solid var(--rule);
+    position: relative; z-index: 1;
+  }
+  .contact-inner {
+    max-width: 720px; margin: 0 auto;
+  }
+  .contact-inner h2 { margin-bottom: 18px; }
+  .contact-inner .lede {
+    font-family: var(--font-display); font-size: 20px;
+    line-height: 1.4; color: var(--ink-2); margin-bottom: 40px;
+    max-width: 600px;
+  }
+
+  form.contact {
+    display: grid; gap: 18px;
+  }
+  form.contact label {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 6px; display: block;
+  }
+  form.contact input,
+  form.contact textarea,
+  form.contact select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--rule);
+    background: var(--paper);
+    font-family: var(--font-body); font-size: 15px; color: var(--ink);
+    border-radius: 0;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  form.contact input:focus,
+  form.contact textarea:focus,
+  form.contact select:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: white;
+  }
+  form.contact textarea { resize: vertical; min-height: 100px; }
+  form.contact .grid-2 {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+  }
+  @media (max-width: 600px) { form.contact .grid-2 { grid-template-columns: 1fr; } }
+  form.contact button {
+    background: var(--ink); color: var(--paper);
+    padding: 18px 28px;
+    border: none;
+    font-family: var(--font-mono); font-size: 12px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.2s ease;
+    display: inline-flex; align-items: center; gap: 12px;
+    justify-self: start;
+    margin-top: 8px;
+  }
+  form.contact button:hover {
+    background: var(--accent); transform: translateY(-2px);
+  }
+  form.contact button .arr { transition: transform 0.25s ease; }
+  form.contact button:hover .arr { transform: translateX(4px); }
+
+  form.contact .alt-route {
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--ink-3); margin-top: 16px;
+    line-height: 1.7;
+  }
+  form.contact .alt-route a {
+    color: var(--accent-deep);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent);
+  }
+  form.contact .alt-route a:hover { color: var(--accent); }
+
+  /* Footer */
+  footer {
+    background: var(--ink); color: var(--paper);
+    padding: 60px 28px 30px;
+    position: relative; z-index: 1;
+  }
+  footer .inner {
+    max-width: 1100px; margin: 0 auto;
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  @media (max-width: 700px) { footer .inner { grid-template-columns: 1fr 1fr; } }
+  footer h5 {
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(250,250,247,0.5); margin: 0 0 16px;
+    font-weight: 500;
+  }
+  footer .col-brand {
+    font-family: var(--font-display); font-size: 28px;
+    line-height: 1.2;
+  }
+  footer .col-brand em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent);
+  }
+  footer .col-brand p {
+    font-family: var(--font-body); font-size: 13px;
+    color: rgba(250,250,247,0.65); line-height: 1.5;
+    margin-top: 16px; max-width: 320px;
+  }
+  footer ul { list-style: none; padding: 0; margin: 0; }
+  footer li { padding: 4px 0; }
+  footer a {
+    color: rgba(250,250,247,0.7); text-decoration: none;
+    font-size: 13px;
+    transition: color 0.2s ease;
+  }
+  footer a:hover { color: var(--accent); }
+  footer .legal {
+    max-width: 1100px; margin: 24px auto 0;
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+    font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(250,250,247,0.45);
+  }
+</style>
+</head>
+<body>
+
+<!-- Top nav -->
+<nav class="top" id="topnav">
+  <div class="inner">
+    <a class="logo" href="#top">
+      <span class="pre">Studio</span>
+      <span>T<em>a</em>ntra</span>
+    </a>
+    <div class="links">
+      <a href="#agents">Agents</a>
+      <a href="#how">How it works</a>
+      <a href="#numbers">Why</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact" class="cta">Get pilot access →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="eyebrow reveal in">
+    <span class="pulse"></span>
+    Private beta · Taking design partners in Hyderabad &amp; Bengaluru
+  </div>
+
+  <h1 class="reveal in reveal-delay-1">
+    Ship 200 ad creatives a month <em>in seven languages</em> — with the team you already have.
+  </h1>
+
+  <p class="lede reveal in reveal-delay-2">
+    Studio Tantra is a six-agent AI workflow built for Indian creative shops and D2C brands. Character consistency across every variant. Regional-language voice and dub. 18-hour delivery, billed per finished asset.
+  </p>
+
+  <div class="ctas reveal in reveal-delay-3">
+    <a href="#contact" class="cta-primary">
+      Apply for pilot access
+      <span class="arr">→</span>
+    </a>
+    <a href="#how" class="cta-secondary">See how it works</a>
+  </div>
+</header>
+
+<!-- Status strip / marquee -->
+<div class="status-strip" aria-hidden="true">
+  <div class="scroll">
+    <span>Six agents · One critique gate · 18-hour delivery</span>
+    <span><em>Telugu</em></span>
+    <span>Character-consistent across every variant</span>
+    <span><em>Tamil</em></span>
+    <span>Per-asset billing · No retainer</span>
+    <span><em>Hindi</em></span>
+    <span>Built in Hyderabad for Indian D2C</span>
+    <span><em>Marathi</em></span>
+    <span>From brief to ship — same week</span>
+    <span><em>Bangla</em></span>
+    <!-- Duplicate for seamless scroll -->
+    <span>Six agents · One critique gate · 18-hour delivery</span>
+    <span><em>Telugu</em></span>
+    <span>Character-consistent across every variant</span>
+    <span><em>Tamil</em></span>
+    <span>Per-asset billing · No retainer</span>
+    <span><em>Hindi</em></span>
+    <span>Built in Hyderabad for Indian D2C</span>
+    <span><em>Marathi</em></span>
+    <span>From brief to ship — same week</span>
+    <span><em>Bangla</em></span>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <span class="section-num reveal">§ 01 · The problem</span>
+  <h2 class="reveal reveal-delay-1">A six-person ad shop in Hyderabad ships forty creatives a month. <em>Their D2C client just asked for two hundred — in five languages — by Friday.</em></h2>
+  <p class="reveal reveal-delay-2" style="font-size: 17px; color: var(--ink-2);">
+    The traditional path: hire freelancers, juggle voice talent, eat the timeline. Or say no, lose the account.
+    The AI path so far: piece together InVideo, ChatGPT, ElevenLabs, manual editing — and watch character consistency fall apart by scene three.
+  </p>
+
+  <div class="problem-grid">
+    <div class="problem-cell reveal reveal-delay-3">
+      <div class="label">What's broken today</div>
+      <h3>Three vendors. Four invoices. Six hours of <em>manual</em> consistency fixes per asset.</h3>
+      <ul>
+        <li>Mascot's face shifts between scene 1 and scene 4</li>
+        <li>Telugu dub from Fiverr arrives 48 hours late</li>
+        <li>9:16 / 1:1 / 16:9 each cut by hand</li>
+        <li>Cost per finished asset: ₹3,000–₹15,000</li>
+      </ul>
+    </div>
+    <div class="problem-cell contrast reveal reveal-delay-4">
+      <div class="label">What changes with us</div>
+      <h3>One platform. One invoice. <em>Eighteen hours</em> from brief to ship.</h3>
+      <ul>
+        <li>Identity Lock keeps your mascot visually stable</li>
+        <li>Sarvam AI dubs into 7 Indian languages natively</li>
+        <li>All aspects rendered from one master</li>
+        <li>Cost per finished asset: ₹250–₹400</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section id="agents">
+  <span class="section-num reveal">§ 02 · The agents</span>
+  <h2 class="reveal reveal-delay-1">Six specialists. <em>One orchestrator.</em> Every asset signed off before delivery.</h2>
+  <p class="reveal reveal-delay-2" style="font-size: 17px; color: var(--ink-2);">
+    Where most "AI video" tools sell a single magic button, we sell the opposite: a system of named specialists, each accountable for one part of the work — and a critique agent that can reject any asset before it reaches you.
+  </p>
+
+  <div class="agents-row">
+    <!-- 01 Brief -->
+    <div class="agent-card reveal reveal-delay-1">
+      <div class="num">01</div>
+      <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="62" height="62" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="1.5"/>
+        <line x1="14" y1="20" x2="50" y2="20" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <line x1="14" y1="28" x2="42" y2="28" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <line x1="14" y1="36" x2="46" y2="36" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <line x1="14" y1="44" x2="38" y2="44" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <circle cx="50" cy="44" r="3" class="agent-fill" fill="#d97706"/>
+      </svg>
+      <div class="name">Brief</div>
+      <div class="role">Parses · Plans · Routes</div>
+    </div>
+
+    <!-- 02 Identity -->
+    <div class="agent-card reveal reveal-delay-2">
+      <div class="num">02</div>
+      <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="62" height="62" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="1.5"/>
+        <circle cx="32" cy="28" r="10" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <circle cx="32" cy="28" r="3" class="agent-fill" fill="#d97706"/>
+        <path d="M 18 50 Q 32 38 46 50" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+      </svg>
+      <div class="name">Identity</div>
+      <div class="role">Locks character · Holds it</div>
+    </div>
+
+    <!-- 03 Scene -->
+    <div class="agent-card reveal reveal-delay-3">
+      <div class="num">03</div>
+      <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="62" height="62" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="1.5"/>
+        <rect x="14" y="18" width="36" height="22" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <circle cx="22" cy="26" r="3" class="agent-fill" fill="#d97706"/>
+        <path d="M 14 40 L 26 30 L 36 36 L 50 24" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <line x1="20" y1="46" x2="44" y2="46" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+      </svg>
+      <div class="name">Scene</div>
+      <div class="role">Renders · Composes</div>
+    </div>
+
+    <!-- 04 Voice -->
+    <div class="agent-card reveal reveal-delay-4">
+      <div class="num">04</div>
+      <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="62" height="62" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="1.5"/>
+        <line x1="18" y1="32" x2="18" y2="32" class="agent-stroke" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="24" y1="26" x2="24" y2="38" class="agent-stroke" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="30" y1="20" x2="30" y2="44" class="agent-stroke" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+        <line x1="36" y1="24" x2="36" y2="40" class="agent-stroke" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="42" y1="28" x2="42" y2="36" class="agent-stroke" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+        <line x1="48" y1="32" x2="48" y2="32" class="agent-stroke" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+      </svg>
+      <div class="name">Voice</div>
+      <div class="role">Dubs · Lip-syncs · Localises</div>
+    </div>
+
+    <!-- 05 Edit -->
+    <div class="agent-card reveal reveal-delay-5">
+      <div class="num">05</div>
+      <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="62" height="62" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="1.5"/>
+        <rect x="12" y="20" width="14" height="10" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <rect x="28" y="20" width="10" height="10" class="agent-fill" fill="#d97706"/>
+        <rect x="40" y="20" width="12" height="10" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <rect x="12" y="34" width="20" height="10" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <rect x="34" y="34" width="18" height="10" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+      </svg>
+      <div class="name">Edit</div>
+      <div class="role">Cuts · Muxes · Resizes</div>
+    </div>
+
+    <!-- 06 Critique -->
+    <div class="agent-card critique reveal reveal-delay-6">
+      <div class="num">06</div>
+      <svg width="44" height="44" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <rect x="1" y="1" width="62" height="62" fill="none" class="agent-stroke" stroke="#92400e" stroke-width="2"/>
+        <circle cx="32" cy="32" r="14" fill="none" class="agent-stroke" stroke="#0a0a0a" stroke-width="2"/>
+        <path d="M 24 32 L 30 38 L 42 24" fill="none" class="agent-stroke" stroke="#d97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="name">Critique</div>
+      <div class="role">Judges · Rejects · Regen</div>
+    </div>
+  </div>
+
+  <p class="reveal" style="margin-top: 36px; font-family: var(--font-mono); font-size: 13px; color: var(--ink-3); max-width: 720px;">
+    Hover any agent to inspect. The Critique agent — highlighted in saffron — is the only one that can reject an asset and trigger regeneration before it reaches you. <em style="color: var(--accent-deep);">Quality is checked, not promised.</em>
+  </p>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <span class="section-num reveal">§ 03 · How it works</span>
+  <h2 class="reveal reveal-delay-1">From <em>brief</em> to ship — in four steps.</h2>
+
+  <div class="flow">
+    <div class="flow-step reveal reveal-delay-1">
+      <div class="step-num">01</div>
+      <h4>You upload a brief</h4>
+      <p>Reference image of mascot or hero, brand voice doc or 5 prior ads, one-paragraph campaign brief, target language list.</p>
+      <div class="meta">~5 minutes</div>
+    </div>
+    <div class="flow-step reveal reveal-delay-2">
+      <div class="step-num">02</div>
+      <h4>You approve the parsed brief</h4>
+      <p>Brief agent extracts a structured shot list. You confirm before any rendering starts. No surprises in the bill.</p>
+      <div class="meta">~10 minutes</div>
+    </div>
+    <div class="flow-step reveal reveal-delay-3">
+      <div class="step-num">03</div>
+      <h4>The agents work</h4>
+      <p>Identity Lock holds your mascot. Scene Renderer composes. Voice dubs in selected languages. Editor cuts to all aspects. Critique reviews each asset.</p>
+      <div class="meta">~6–18 hours</div>
+    </div>
+    <div class="flow-step reveal reveal-delay-4">
+      <div class="step-num">04</div>
+      <h4>Assets land in your dashboard</h4>
+      <p>Download, upload to Meta / YouTube / wherever. Reject anything you don't want — we regenerate at no cost.</p>
+      <div class="meta">Same day</div>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUAGES -->
+<section id="languages">
+  <span class="section-num reveal">§ 04 · Languages</span>
+  <h2 class="reveal reveal-delay-1">Built for <em>regional</em> India first.</h2>
+  <p class="reveal reveal-delay-2" style="font-size: 17px; color: var(--ink-2);">
+    US-built tools treat Indian languages as an afterthought. We built the voice and dub stack on Sarvam AI, the only TTS engine with credible Telugu and Tamil prosody. Lip-sync via Sync Labs.
+  </p>
+
+  <div class="lang-row">
+    <div class="lang reveal reveal-delay-1">
+      <div class="native">English</div>
+      <div class="name">EN</div>
+      <div class="status">Live · Q1</div>
+    </div>
+    <div class="lang reveal reveal-delay-2">
+      <div class="native">हिन्दी</div>
+      <div class="name">Hindi</div>
+      <div class="status">Live · Q1</div>
+    </div>
+    <div class="lang reveal reveal-delay-3">
+      <div class="native">తెలుగు</div>
+      <div class="name">Telugu</div>
+      <div class="status">Live · Q2</div>
+    </div>
+    <div class="lang reveal reveal-delay-4">
+      <div class="native">தமிழ்</div>
+      <div class="name">Tamil</div>
+      <div class="status">Live · Q2</div>
+    </div>
+    <div class="lang reveal reveal-delay-5">
+      <div class="native">मराठी</div>
+      <div class="name">Marathi</div>
+      <div class="status q3">Q3 2026</div>
+    </div>
+    <div class="lang reveal reveal-delay-6">
+      <div class="native">বাংলা</div>
+      <div class="name">Bangla</div>
+      <div class="status q3">Q3 2026</div>
+    </div>
+    <div class="lang reveal reveal-delay-6">
+      <div class="native">ಕನ್ನಡ</div>
+      <div class="name">Kannada</div>
+      <div class="status q4">Q4 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- NUMBERS -->
+<div class="numbers" id="numbers">
+  <div class="inner">
+    <div class="stat reveal">
+      <div class="label">Cost per asset</div>
+      <div class="value"><em>₹250</em></div>
+      <div class="desc">Down from ₹3,000–₹15,000 with traditional vendor stack</div>
+    </div>
+    <div class="stat reveal reveal-delay-1">
+      <div class="label">Delivery time</div>
+      <div class="value"><em>18</em>h</div>
+      <div class="desc">From approved brief to deliverable assets</div>
+    </div>
+    <div class="stat reveal reveal-delay-2">
+      <div class="label">Languages</div>
+      <div class="value"><em>7</em></div>
+      <div class="desc">English, Hindi, Telugu, Tamil at launch · Marathi, Bangla, Kannada by Q4</div>
+    </div>
+    <div class="stat reveal reveal-delay-3">
+      <div class="label">Specialist agents</div>
+      <div class="value"><em>6</em></div>
+      <div class="desc">Including a critique gate that can reject any asset before delivery</div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<section id="faq">
+  <span class="section-num reveal">§ 05 · Questions</span>
+  <h2 class="reveal reveal-delay-1">Things people <em>actually</em> ask.</h2>
+
+  <div class="faq-list">
+    <details class="faq reveal reveal-delay-1">
+      <summary>What does Studio Tantra actually do?<span class="plus">+</span></summary>
+      <div class="answer">We produce ad creatives using six specialist AI agents. You give us a campaign brief, a brand reference, and a language list. We deliver finished video assets — character-consistent, multilingual, platform-ready — in 18 hours. Per-asset billing, no retainer.</div>
+    </details>
+    <details class="faq reveal reveal-delay-2">
+      <summary>Who is this for?<span class="plus">+</span></summary>
+      <div class="answer">Creative shops and digital ad agencies of 5–25 people, primarily in Hyderabad and Bengaluru, serving D2C brands that need regional-language ad creative at scale. We're not currently set up for solo creators, wedding videographers, or full-length film production.</div>
+    </details>
+    <details class="faq reveal reveal-delay-3">
+      <summary>How is this different from Runway, Pika, or HeyGen?<span class="plus">+</span></summary>
+      <div class="answer">Those are foundation models or single-purpose tools. We orchestrate them. The work the customer cares about — character consistency across an entire campaign, regional-language dub that doesn't sound robotic, a critique gate that catches drift before delivery — is the workflow on top, not the underlying model. Different problem, different product.</div>
+    </details>
+    <details class="faq reveal reveal-delay-4">
+      <summary>What does it cost?<span class="plus">+</span></summary>
+      <div class="answer">Per-asset pricing from approximately ₹250 per finished asset on the Studio tier. Monthly credit packs starting at ₹4,999 for Starter. Final tier confirmed during pilot onboarding — design partners pay nothing for the first 60 days.</div>
+    </details>
+    <details class="faq reveal reveal-delay-5">
+      <summary>Why are you in private beta?<span class="plus">+</span></summary>
+      <div class="answer">Because shipping a public product before getting 5–10 partner customers right is how AI products earn refund tickets. We'd rather be slow now and right later. Pilot slots are limited to Hyderabad and Bengaluru ad shops in Q2 2026.</div>
+    </details>
+    <details class="faq reveal reveal-delay-6">
+      <summary>What about copyright and AI labelling?<span class="plus">+</span></summary>
+      <div class="answer">Every asset we deliver carries platform-required AI disclosures (Meta, YouTube, Google Ads). We use commercially-licensed APIs only — no scraped training data in our pipeline. Customer assets stay in your account; we don't reuse them for anything else.</div>
+    </details>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<div class="contact-wrap" id="contact">
+  <div class="contact-inner">
+    <span class="section-num reveal">§ 06 · Apply for pilot access</span>
+    <h2 class="reveal reveal-delay-1">Tell us about your <em>shop</em>.</h2>
+    <p class="lede reveal reveal-delay-2">
+      We're onboarding 5–8 design partners in Q2 2026. Free for the first 60 days; you give us feedback and a case study. If it doesn't work for you, we shake hands and part ways.
+    </p>
+
+    <form class="contact reveal reveal-delay-3" id="pilotForm" onsubmit="return submitForm(event)">
+      <div>
+        <label for="name">Your name</label>
+        <input type="text" id="name" name="name" required autocomplete="name" />
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label for="company">Shop / company</label>
+          <input type="text" id="company" name="company" required autocomplete="organization" />
+        </div>
+        <div>
+          <label for="city">City</label>
+          <select id="city" name="city" required>
+            <option value="">Select…</option>
+            <option>Hyderabad</option>
+            <option>Bengaluru</option>
+            <option>Mumbai</option>
+            <option>Pune</option>
+            <option>Delhi NCR</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <label for="size">Team size</label>
+          <select id="size" name="size" required>
+            <option value="">Select…</option>
+            <option>Solo / 2–4 people</option>
+            <option>5–10 people</option>
+            <option>11–25 people</option>
+            <option>25+ people</option>
+          </select>
+        </div>
+        <div>
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required autocomplete="email" />
+        </div>
+      </div>
+
+      <div>
+        <label for="message">What would you use Studio Tantra for? (one paragraph is fine)</label>
+        <textarea id="message" name="message" required placeholder="e.g. We do regional-language Reels for 6 D2C brands. Volume is the bottleneck — we'd want to test character consistency in Telugu first."></textarea>
+      </div>
+
+      <button type="submit">
+        Open in mail
+        <span class="arr">→</span>
+      </button>
+
+      <div class="alt-route">
+        Form opens your default mail client with a pre-filled message to <a href="mailto:uday.kr27@gmail.com">uday.kr27@gmail.com</a>.<br/>
+        Or write directly. We reply within 48 hours.
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="inner">
+    <div class="col-brand">
+      <div>Studio T<em>a</em>ntra</div>
+      <p>An AI-agent-led production studio for Indian creative shops and D2C brands. Hyderabad-based, regional-language-first, character-consistent.</p>
+    </div>
+    <div>
+      <h5>Product</h5>
+      <ul>
+        <li><a href="#agents">The agents</a></li>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#languages">Languages</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>For</h5>
+      <ul>
+        <li>Creative shops</li>
+        <li>D2C brands</li>
+        <li>Regional ad agencies</li>
+        <li>Coaching creators</li>
+      </ul>
+    </div>
+    <div>
+      <h5>Contact</h5>
+      <ul>
+        <li><a href="mailto:uday.kr27@gmail.com">uday.kr27@gmail.com</a></li>
+        <li><a href="#contact">Pilot access form</a></li>
+        <li>Hyderabad · India</li>
+      </ul>
+    </div>
+  </div>
+  <div class="legal">
+    <span>© 2026 Studio Tantra · Private beta</span>
+    <span>v0.1 · Last updated 26 Apr 2026</span>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav border
+  const nav = document.getElementById('topnav');
+  const onScroll = () => {
+    if (window.scrollY > 16) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // Reveal on scroll (IntersectionObserver)
+  const reveals = document.querySelectorAll('.reveal:not(.in)');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(r => io.observe(r));
+
+  // Form submission — opens mail client with pre-filled message
+  function submitForm(event) {
+    event.preventDefault();
+    const f = event.target;
+    const name    = f.name.value.trim();
+    const company = f.company.value.trim();
+    const city    = f.city.value.trim();
+    const size    = f.size.value.trim();
+    const email   = f.email.value.trim();
+    const message = f.message.value.trim();
+
+    const subject = `Pilot access · ${company} · ${city}`;
+    const body =
+      `Hi Uday,\n\n` +
+      `I'd like to apply for pilot access to Studio Tantra.\n\n` +
+      `Name: ${name}\n` +
+      `Company: ${company}\n` +
+      `City: ${city}\n` +
+      `Team size: ${size}\n` +
+      `Reply email: ${email}\n\n` +
+      `What we'd use it for:\n${message}\n\n` +
+      `Thanks,\n${name}`;
+
+    const url = `mailto:uday.kr27@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = url;
+    return false;
+  }
+</script>
+</body>
+</html>
