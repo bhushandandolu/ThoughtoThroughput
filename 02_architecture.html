@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agentic Media Pipeline — Technical Architecture v0.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&family=GT+Sectra:wght@400;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --ink-2: #1f1f1f;
+    --ink-3: #525252;
+    --paper: #fafaf7;
+    --paper-2: #f0ede4;
+    --paper-3: #e6e1d2;
+    --code-bg: #1a1612;
+    --code-fg: #e6e1d2;
+    --accent: #d97706;
+    --accent-deep: #92400e;
+    --accent-soft: #fef3c7;
+    --good: #166534;
+    --warn: #a16207;
+    --kill: #991b1b;
+    --rule: #1a1a1a;
+    --font-display: 'GT Sectra', Georgia, serif;
+    --font-body: 'Geist', system-ui, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+    --font-accent: 'Instrument Serif', serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--font-body); font-size: 15px; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 56px 28px 120px; }
+
+  /* Masthead */
+  .masthead {
+    border-bottom: 1px solid var(--rule); padding-bottom: 28px; margin-bottom: 56px;
+    display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: end;
+  }
+  .masthead .pub { font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.2em; color: var(--ink-3); }
+  .masthead h1 {
+    grid-column: 1 / -1;
+    font-family: var(--font-display); font-size: clamp(40px, 6vw, 68px);
+    line-height: 0.95; letter-spacing: -0.025em; margin: 12px 0 0; font-weight: 400;
+  }
+  .masthead h1 em { font-family: var(--font-accent); font-style: italic; color: var(--accent); }
+
+  /* Standfirst */
+  .standfirst {
+    font-family: var(--font-display); font-size: 21px; line-height: 1.45;
+    color: var(--ink-2); border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 22px; margin: 0 0 56px; max-width: 720px; font-weight: 400;
+  }
+  .standfirst em { font-family: var(--font-accent); font-style: italic; color: var(--accent); }
+
+  /* TOC */
+  .toc {
+    background: var(--paper-2); border: 1px solid var(--paper-3);
+    padding: 22px 28px; margin-bottom: 56px;
+  }
+  .toc h4 {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+    color: var(--accent-deep); margin: 0 0 14px; text-transform: uppercase;
+  }
+  .toc ol { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 28px; }
+  .toc li {
+    padding: 5px 0; font-size: 14px; break-inside: avoid;
+    counter-increment: toc;
+  }
+  .toc { counter-reset: toc; }
+  .toc li::before {
+    content: counter(toc, decimal-leading-zero) " — ";
+    font-family: var(--font-mono); font-size: 10px; color: var(--accent);
+  }
+  .toc a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted transparent; }
+  .toc a:hover { border-bottom-color: var(--accent); color: var(--accent-deep); }
+  @media (max-width: 700px) { .toc ol { columns: 1; } }
+
+  /* Sections */
+  section { margin-bottom: 80px; scroll-margin-top: 24px; }
+  .section-num {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.25em;
+    color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 8px;
+  }
+  h2 {
+    font-family: var(--font-display); font-size: clamp(30px, 4vw, 42px);
+    line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 28px; font-weight: 400;
+    border-bottom: 1px solid var(--rule); padding-bottom: 14px;
+  }
+  h2 em { font-family: var(--font-accent); font-style: italic; color: var(--accent); }
+  h3 {
+    font-family: var(--font-body); font-weight: 600; font-size: 19px;
+    margin: 32px 0 12px; letter-spacing: -0.01em;
+  }
+  h4 {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-3); margin: 22px 0 10px; font-weight: 500;
+  }
+  p { margin: 0 0 14px; max-width: 720px; }
+  ul, ol { padding-left: 22px; margin: 0 0 18px; max-width: 720px; }
+  li { margin-bottom: 8px; }
+  strong { font-weight: 600; color: var(--ink); }
+  em { color: var(--accent-deep); }
+
+  /* Code blocks */
+  pre {
+    background: var(--code-bg); color: var(--code-fg);
+    padding: 22px 26px; border-radius: 0;
+    font-family: var(--font-mono); font-size: 13px; line-height: 1.6;
+    overflow-x: auto; margin: 18px 0;
+    border-left: 3px solid var(--accent);
+  }
+  code {
+    font-family: var(--font-mono); font-size: 0.92em;
+    background: var(--paper-2); padding: 2px 6px; border-radius: 2px;
+  }
+  pre code { background: none; padding: 0; font-size: inherit; }
+
+  /* Code block label */
+  pre::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 14px; opacity: 0.85;
+  }
+
+  /* Callouts */
+  .callout {
+    margin: 22px 0; padding: 18px 22px;
+    border-left: 4px solid var(--accent);
+    background: var(--accent-soft);
+    font-size: 14px;
+  }
+  .callout.warn { border-left-color: var(--warn); background: #fef3c7; }
+  .callout.kill { border-left-color: var(--kill); background: #fee2e2; }
+  .callout.good { border-left-color: var(--good); background: #d1fae5; }
+  .callout-label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent-deep); margin-bottom: 6px;
+    display: block; font-weight: 600;
+  }
+  .callout.warn .callout-label { color: var(--warn); }
+  .callout.kill .callout-label { color: var(--kill); }
+  .callout.good .callout-label { color: var(--good); }
+
+  /* Tables */
+  .tbl {
+    width: 100%; border-collapse: collapse; font-size: 14px; margin: 18px 0;
+  }
+  .tbl th {
+    text-align: left; font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3);
+    border-bottom: 2px solid var(--rule); padding: 10px 12px 10px 0;
+    font-weight: 500; vertical-align: bottom;
+  }
+  .tbl td {
+    border-bottom: 1px solid var(--paper-3); padding: 12px 12px 12px 0;
+    vertical-align: top;
+  }
+  .pill {
+    display: inline-block; font-family: var(--font-mono); font-size: 10px;
+    padding: 2px 8px; letter-spacing: 0.05em; border-radius: 2px;
+  }
+  .pill-good { background: #d1fae5; color: var(--good); }
+  .pill-warn { background: #fef3c7; color: var(--warn); }
+  .pill-kill { background: #fee2e2; color: var(--kill); }
+  .pill-neutral { background: var(--paper-2); color: var(--ink-3); }
+
+  /* Architecture diagram container */
+  .diagram {
+    background: var(--paper-2); border: 1px solid var(--paper-3);
+    padding: 28px; margin: 24px 0; overflow-x: auto;
+  }
+  .diagram svg { display: block; max-width: 100%; height: auto; }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--rule); margin-top: 80px;
+    padding-top: 22px; font-family: var(--font-mono); font-size: 11px;
+    color: var(--ink-3); display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px; letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="pub">Engineering · Internal · v0.1</div>
+    <div></div>
+    <div class="pub">CTO Memo · 26 Apr 2026</div>
+    <h1>Agentic Media Pipeline — <em>Architecture</em></h1>
+  </header>
+
+  <!-- Standfirst -->
+  <p class="standfirst">
+    A modular agent orchestration for B2B short-form ad production. Six specialist agents,
+    one stateful graph, and the single hardest bet in the system: <em>making a brand mascot look
+    like the same character across thirty different generated frames.</em>
+  </p>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#s1">CTO mode — what we're actually building</a></li>
+      <li><a href="#s2">Why LangGraph (and not CrewAI)</a></li>
+      <li><a href="#s3">The state machine — every job's spine</a></li>
+      <li><a href="#s4">The state schema</a></li>
+      <li><a href="#s5">Character consistency — the hardest problem</a></li>
+      <li><a href="#s6">ComfyUI's role (and why it's not the orchestrator)</a></li>
+      <li><a href="#s7">Agent contracts &amp; the critique gate</a></li>
+      <li><a href="#s8">Tech stack — every line item, every cost</a></li>
+      <li><a href="#s9">Failure modes &amp; recovery</a></li>
+      <li><a href="#s10">Observability — what to instrument first</a></li>
+      <li><a href="#s11">Build sequence — first 12 weeks</a></li>
+      <li><a href="#s12">What I'd cut if forced to ship in 4 weeks</a></li>
+    </ol>
+  </nav>
+
+  <!-- §1 -->
+  <section id="s1">
+    <span class="section-num">§ 01 · Framing</span>
+    <h2>CTO mode — what we're <em>actually</em> building.</h2>
+    <p>Strip away the brand and the pitch. The system is a <strong>stateful workflow engine</strong> that takes a structured campaign brief and produces a set of short-form video assets, with three properties most "AI video" pipelines don't have:</p>
+    <ol>
+      <li><strong>Identity persistence.</strong> The same mascot/hero/product appears recognisably across every frame in every variant of the campaign.</li>
+      <li><strong>Critique-gated output.</strong> No asset reaches the customer without passing an LLM-as-judge quality check against the brief and the brand rubric.</li>
+      <li><strong>Cost predictability.</strong> Every job has a hard upper bound on token + GPU spend, set by the customer's tier. The orchestrator enforces it; agents cannot exceed it.</li>
+    </ol>
+    <p>Everything else — script generation, dub, edit, aspect-ratio mux — is well-trodden plumbing on top of vendor APIs. The <em>defensibility</em> lives in 1 and 2. Most of the engineering effort goes there.</p>
+
+    <div class="callout">
+      <span class="callout-label">Architectural bet</span>
+      We are not training models. We are not fine-tuning models. We are a <strong>workflow + state + judgment</strong> layer over commodity inference. If you (the engineer reading this) want to fine-tune a base diffusion model, you are in the wrong company.
+    </div>
+  </section>
+
+  <!-- §2 -->
+  <section id="s2">
+    <span class="section-num">§ 02 · Orchestration framework</span>
+    <h2>Why <em>LangGraph</em> — and not CrewAI.</h2>
+    <p>The choice between LangGraph and CrewAI is the most consequential framework decision. I'm picking <strong>LangGraph</strong>. Reasoning, then the counter-argument:</p>
+
+    <table class="tbl">
+      <thead><tr><th>Capability</th><th>LangGraph</th><th>CrewAI</th><th>Why it matters here</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Explicit state schema</td>
+          <td><span class="pill pill-good">First-class</span></td>
+          <td><span class="pill pill-warn">Implicit / context-bag</span></td>
+          <td>Character consistency requires a known, queryable state object. CrewAI's "shared context" is a hash bag. LangGraph forces you to declare what state is.</td>
+        </tr>
+        <tr>
+          <td>Conditional routing</td>
+          <td><span class="pill pill-good">Native (graph edges)</span></td>
+          <td><span class="pill pill-warn">Manager-agent pattern</span></td>
+          <td>Critique → regenerate is a conditional edge. LangGraph models it cleanly. CrewAI requires a Manager LLM to decide, which adds tokens and non-determinism.</td>
+        </tr>
+        <tr>
+          <td>Replay / checkpointing</td>
+          <td><span class="pill pill-good">Built-in (SqliteSaver, Postgres)</span></td>
+          <td><span class="pill pill-kill">DIY</span></td>
+          <td>When a job fails 70% through after burning ₹180 in API calls, we resume from checkpoint, not from zero.</td>
+        </tr>
+        <tr>
+          <td>Human-in-the-loop</td>
+          <td><span class="pill pill-good">interrupt() primitive</span></td>
+          <td><span class="pill pill-warn">Possible, awkward</span></td>
+          <td>Customer brief approval is HITL. We pause the graph, show the parsed brief, wait for approval, resume.</td>
+        </tr>
+        <tr>
+          <td>Vendor-agent abstraction</td>
+          <td><span class="pill pill-warn">Lower-level</span></td>
+          <td><span class="pill pill-good">Higher-level</span></td>
+          <td>CrewAI is faster to prototype if your agents are all chat-LLMs. We have non-LLM agents (Runway video gen, Sarvam dub). LangGraph's lower-level model fits non-LLM nodes better.</td>
+        </tr>
+        <tr>
+          <td>Learning curve</td>
+          <td><span class="pill pill-warn">Steeper</span></td>
+          <td><span class="pill pill-good">Gentler</span></td>
+          <td>Real cost. Adds 1–2 weeks to first prototype.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <span class="callout-label">The honest counter</span>
+      CrewAI ships a working multi-agent prototype in a weekend. LangGraph takes a week. If we were running a hackathon, CrewAI wins. We're not. We're building a system where a single failed checkpoint costs a customer ₹500 in regenerated assets. The state-management primitives matter more than the prototyping speed.
+    </div>
+  </section>
+
+  <!-- §3 -->
+  <section id="s3">
+    <span class="section-num">§ 03 · The graph</span>
+    <h2>The state machine — every <em>job's spine</em>.</h2>
+    <p>One job = one graph traversal. The graph has six worker nodes (the agents), one router (Critique), one checkpoint after every node, and exactly two terminal states: <code>delivered</code> and <code>killed</code>.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 920 480" xmlns="http://www.w3.org/2000/svg" font-family="Geist, sans-serif">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#1a1a1a"/>
+          </marker>
+          <marker id="arr-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#92400e"/>
+          </marker>
+          <marker id="arr-kill" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="#991b1b"/>
+          </marker>
+        </defs>
+
+        <!-- Title -->
+        <text x="460" y="22" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="2" fill="#525252">LANGGRAPH STATE MACHINE — ONE JOB</text>
+
+        <!-- START -->
+        <ellipse cx="80" cy="80" rx="55" ry="22" fill="#0a0a0a"/>
+        <text x="80" y="84" text-anchor="middle" font-size="13" font-weight="600" fill="#fafaf7">START</text>
+
+        <!-- 01 Brief Parser -->
+        <rect x="180" y="56" width="160" height="48" fill="#fafaf7" stroke="#0a0a0a" stroke-width="1.5"/>
+        <text x="260" y="76" text-anchor="middle" font-size="13" font-weight="600">01 · Brief Parser</text>
+        <text x="260" y="93" text-anchor="middle" font-size="10" fill="#525252">Claude · structured output</text>
+
+        <!-- HITL approval -->
+        <polygon points="395,80 440,55 485,80 440,105" fill="#fef3c7" stroke="#a16207" stroke-width="1.5"/>
+        <text x="440" y="78" text-anchor="middle" font-size="10" font-weight="600">HITL</text>
+        <text x="440" y="92" text-anchor="middle" font-size="9">approve?</text>
+
+        <!-- 02 Identity Lock -->
+        <rect x="540" y="56" width="160" height="48" fill="#fafaf7" stroke="#0a0a0a" stroke-width="1.5"/>
+        <text x="620" y="76" text-anchor="middle" font-size="13" font-weight="600">02 · Identity Lock</text>
+        <text x="620" y="93" text-anchor="middle" font-size="10" fill="#525252">Flux + IP-Adapter</text>
+
+        <!-- 03 Scene Renderer -->
+        <rect x="740" y="56" width="160" height="48" fill="#fafaf7" stroke="#0a0a0a" stroke-width="1.5"/>
+        <text x="820" y="76" text-anchor="middle" font-size="13" font-weight="600">03 · Scene Renderer</text>
+        <text x="820" y="93" text-anchor="middle" font-size="10" fill="#525252">Runway / Kling</text>
+
+        <!-- 04 Voice (next row) -->
+        <rect x="740" y="180" width="160" height="48" fill="#fafaf7" stroke="#0a0a0a" stroke-width="1.5"/>
+        <text x="820" y="200" text-anchor="middle" font-size="13" font-weight="600">04 · Voice / Dub</text>
+        <text x="820" y="217" text-anchor="middle" font-size="10" fill="#525252">Sarvam · Sync</text>
+
+        <!-- 05 Editor -->
+        <rect x="540" y="180" width="160" height="48" fill="#fafaf7" stroke="#0a0a0a" stroke-width="1.5"/>
+        <text x="620" y="200" text-anchor="middle" font-size="13" font-weight="600">05 · Editor / Mux</text>
+        <text x="620" y="217" text-anchor="middle" font-size="10" fill="#525252">FFmpeg + Remotion</text>
+
+        <!-- 06 Critique -->
+        <rect x="340" y="180" width="160" height="48" fill="#fef3c7" stroke="#92400e" stroke-width="2"/>
+        <text x="420" y="200" text-anchor="middle" font-size="13" font-weight="600" fill="#92400e">06 · Critique / QA</text>
+        <text x="420" y="217" text-anchor="middle" font-size="10" fill="#525252">Claude · LLM-as-judge</text>
+
+        <!-- Critique decision diamond -->
+        <polygon points="240,204 290,180 340,204 290,228" fill="#fef3c7" stroke="#92400e" stroke-width="1.5"/>
+        <text x="290" y="202" text-anchor="middle" font-size="10" font-weight="600">pass?</text>
+        <text x="290" y="216" text-anchor="middle" font-size="9">or regen</text>
+
+        <!-- DELIVERED -->
+        <ellipse cx="100" cy="204" rx="60" ry="22" fill="#166534"/>
+        <text x="100" y="208" text-anchor="middle" font-size="13" font-weight="600" fill="#fafaf7">DELIVERED</text>
+
+        <!-- Regen feedback (loops back to scene renderer) -->
+        <text x="290" y="270" text-anchor="middle" font-size="10" font-style="italic" fill="#92400e">regenerate (max 2x per agent)</text>
+
+        <!-- KILLED -->
+        <ellipse cx="100" cy="320" rx="50" ry="22" fill="#991b1b"/>
+        <text x="100" y="324" text-anchor="middle" font-size="13" font-weight="600" fill="#fafaf7">KILLED</text>
+
+        <!-- Budget breaker -->
+        <rect x="180" y="298" width="180" height="48" fill="#fee2e2" stroke="#991b1b" stroke-width="1.5"/>
+        <text x="270" y="318" text-anchor="middle" font-size="12" font-weight="600" fill="#991b1b">Budget breaker</text>
+        <text x="270" y="334" text-anchor="middle" font-size="10" fill="#525252">if cost &gt; tier cap → kill</text>
+
+        <!-- Edges -->
+        <line x1="135" y1="80" x2="180" y2="80" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="340" y1="80" x2="395" y2="80" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="485" y1="80" x2="540" y2="80" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arr)"/>
+        <line x1="700" y1="80" x2="740" y2="80" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- 03 → 04 -->
+        <path d="M 820 104 L 820 180" stroke="#1a1a1a" stroke-width="1.5" fill="none" marker-end="url(#arr)"/>
+        <!-- 04 → 05 -->
+        <line x1="740" y1="204" x2="700" y2="204" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- 05 → 06 -->
+        <line x1="540" y1="204" x2="500" y2="204" stroke="#1a1a1a" stroke-width="1.5" marker-end="url(#arr)"/>
+        <!-- 06 → diamond -->
+        <line x1="340" y1="204" x2="340" y2="204" stroke="#92400e" stroke-width="1.5"/>
+        <!-- diamond → DELIVERED -->
+        <line x1="240" y1="204" x2="160" y2="204" stroke="#166534" stroke-width="2" marker-end="url(#arr)"/>
+        <text x="200" y="196" text-anchor="middle" font-size="10" fill="#166534" font-weight="600">PASS</text>
+
+        <!-- diamond → regen back to 03 (long curve) -->
+        <path d="M 290 228 Q 290 280 540 270 Q 760 260 820 110" stroke="#92400e" stroke-width="1.5" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-warn)"/>
+        <text x="540" y="290" font-size="10" fill="#92400e">FAIL · regen</text>
+
+        <!-- HITL → KILLED -->
+        <path d="M 440 105 Q 440 320 160 320" stroke="#991b1b" stroke-width="1.5" stroke-dasharray="4,3" fill="none" marker-end="url(#arr-kill)"/>
+        <text x="430" y="200" font-size="10" fill="#991b1b">reject</text>
+
+        <!-- Budget breaker → KILLED -->
+        <line x1="180" y1="320" x2="155" y2="320" stroke="#991b1b" stroke-width="1.5" marker-end="url(#arr-kill)"/>
+
+        <!-- Checkpoint annotations -->
+        <text x="460" y="420" text-anchor="middle" font-size="11" fill="#525252" font-style="italic">
+          Postgres checkpoint after every node. Resumable. Replayable. Auditable.
+        </text>
+        <text x="460" y="440" text-anchor="middle" font-size="11" fill="#525252" font-style="italic">
+          Each node also writes COGS to Helicone. The budget breaker watches that stream.
+        </text>
+      </svg>
+    </div>
+
+    <h4>Edges that matter</h4>
+    <ul>
+      <li><strong>Brief Parser → HITL</strong>: We pause for customer to confirm parsed brief. Saves ~₹150 of wasted generation if the AI parsed the brief wrong.</li>
+      <li><strong>Critique → regenerate</strong>: The dashed loop is where we eat our own cost. Bounded to max 2 regenerations per agent. After that, the job either ships with a quality flag or is killed and refunded.</li>
+      <li><strong>Budget breaker</strong>: Independent watcher. If cumulative job cost exceeds 1.4× the tier cap, kill the job. Not a soft limit. A hard one.</li>
+    </ul>
+  </section>
+
+  <!-- §4 -->
+  <section id="s4">
+    <span class="section-num">§ 04 · State schema</span>
+    <h2>The state schema.</h2>
+    <p>This is the most important file in the codebase. Every agent reads from and writes to this object. If the schema is right, the system works. If it's wrong, no amount of clever orchestration saves us.</p>
+
+    <pre data-label="state.py · pydantic models"><code># state.py — single source of truth for any in-flight job
+
+from typing import Optional, Literal, Annotated
+from pydantic import BaseModel, Field
+from datetime import datetime
+import operator
+
+class CharacterRef(BaseModel):
+    """The most important object in the system.
+    Everything character-consistency-related flows through this."""
+    char_id: str                          # stable across whole job
+    name: str                             # 'Mr Beans the mascot'
+    source_image_urls: list[str]          # original customer-uploaded refs
+    locked_image_url: str                 # canonical 'identity-locked' render
+    ip_adapter_embedding: Optional[str]   # path/URI to the IP-Adapter conditioning
+    seed: int                             # diffusion seed locked at identity time
+    style_descriptor: str                 # short prose lock — e.g. '3D-rendered cartoon, soft lighting'
+    constraints: list[str]                # 'always wears red scarf', 'no glasses'
+
+class ShotSpec(BaseModel):
+    shot_id: str
+    char_refs: list[str]                  # which CharacterRef.char_ids appear
+    duration_s: float
+    camera: str                           # 'wide push-in', 'top-down product hero'
+    setting: str                          # 'kitchen, morning light'
+    action: str                           # one sentence of what happens
+    dialogue: Optional[str]
+    aspect: Literal['9:16', '1:1', '16:9']
+
+class AgentResult(BaseModel):
+    agent_id: str                         # '01-brief', '03-scene', etc.
+    status: Literal['ok', 'retry', 'fail']
+    output_uri: Optional[str]             # R2 path
+    cost_inr: float                       # COGS, tracked per call
+    elapsed_ms: int
+    notes: str
+
+class CritiqueVerdict(BaseModel):
+    target_shot_id: str
+    pass_: bool = Field(alias='pass')
+    score: float                          # 0–1
+    failures: list[str]                   # 'character drift in scene 3', 'audio out of sync'
+    regenerate_agent: Optional[str]       # which agent to send back to
+
+class JobState(BaseModel):
+    # IDENTITY
+    job_id: str
+    customer_id: str
+    tier: Literal['starter', 'studio', 'agency']
+    created_at: datetime
+
+    # INPUT
+    brief_raw: str                        # what customer typed
+    brief_parsed: Optional[dict]          # structured by 01-brief
+    brief_approved: bool = False          # HITL gate
+
+    # CHARACTERS — the spine of consistency
+    characters: list[CharacterRef] = []   # locked once, read by all downstream agents
+
+    # PLAN
+    shot_list: list[ShotSpec] = []        # built by Brief Parser
+
+    # OUTPUTS — accumulated, never overwritten
+    agent_log: Annotated[list[AgentResult], operator.add] = []
+    critique_log: Annotated[list[CritiqueVerdict], operator.add] = []
+    asset_uris: dict[str, str] = {}       # shot_id → final muxed asset URI
+
+    # BUDGET
+    tier_cap_inr: float                   # set once at job creation
+    cost_so_far_inr: float = 0.0          # updated by every node
+    regen_count_by_agent: dict[str, int] = {}
+
+    # TERMINAL
+    final_status: Optional[Literal['delivered', 'killed', 'flagged']]
+    kill_reason: Optional[str]</code></pre>
+
+    <div class="callout">
+      <span class="callout-label">Why this schema, specifically</span>
+      <strong>Three deliberate choices.</strong> (1) <code>characters</code> is locked early and never mutated downstream — that's the consistency anchor. (2) <code>agent_log</code> uses LangGraph's <code>operator.add</code> reducer so each node appends rather than overwrites — full audit trail. (3) <code>cost_so_far_inr</code> is on the state object, not a side-effect — the budget breaker can read it inside the graph without external dependencies.
+    </div>
+  </section>
+
+  <!-- §5 -->
+  <section id="s5">
+    <span class="section-num">§ 05 · The hardest problem</span>
+    <h2>Character consistency — <em>where everyone fails</em>.</h2>
+    <p>This is where most AI ad-generation tools visibly break. The mascot's face shifts shape between scenes 1 and 4. The product's color drifts. The hero actress's hair changes from black to dark brown in the same campaign. Customers can spot this in three seconds. They will not pay for output that drifts.</p>
+
+    <h3>Three layers of consistency control</h3>
+
+    <h4>Layer 1 — Identity Lock at job start</h4>
+    <p>The Identity Lock agent runs <em>once</em> at the start of every job, never per-shot. Its job is to convert customer-uploaded references into a canonical conditioning artifact that all downstream rendering uses.</p>
+    <ul>
+      <li>Customer uploads 3–8 reference images of mascot/product/hero.</li>
+      <li>We run them through Flux 1.1 Pro with IP-Adapter to extract a stable visual conditioning.</li>
+      <li>We generate one canonical "locked" reference image at a fixed seed and store it in R2.</li>
+      <li>The IP-Adapter embedding, the seed, and the canonical URL go into the <code>CharacterRef</code> object on state.</li>
+    </ul>
+    <p>From this point forward, no agent generates a character from scratch. They all condition on the locked reference.</p>
+
+    <h4>Layer 2 — Conditioning at every render</h4>
+    <p>The Scene Renderer never calls Runway/Kling with just a prompt. It always calls with <strong>prompt + locked_image_url + style_descriptor</strong>. For Runway Gen-4, this means using the image-to-video endpoint with the locked image as the first frame conditioner. For Kling, the equivalent is the "subject reference" parameter.</p>
+
+    <pre data-label="agents/scene_renderer.py · simplified"><code>async def render_shot(state: JobState, shot: ShotSpec) -> AgentResult:
+    chars = [c for c in state.characters if c.char_id in shot.char_refs]
+    primary = chars[0]  # main character anchor
+
+    response = await runway_client.generate_video(
+        prompt=build_prompt(shot, chars),
+        reference_image=primary.locked_image_url,    # <-- the lock
+        seed=primary.seed,                           # <-- deterministic
+        style_lock=primary.style_descriptor,
+        duration=shot.duration_s,
+        aspect=shot.aspect,
+    )
+
+    cost = response.metadata.cost_inr
+    return AgentResult(
+        agent_id="03-scene",
+        status="ok",
+        output_uri=response.output_url,
+        cost_inr=cost,
+        elapsed_ms=response.elapsed_ms,
+        notes=f"shot={shot.shot_id} char={primary.char_id}"
+    )</code></pre>
+
+    <h4>Layer 3 — The Critique gate catches what Layers 1–2 miss</h4>
+    <p>Even with perfect conditioning, diffusion models drift. The Critique agent's most important job is not "is the asset good" — it's "<em>does the character in this asset still look like the locked reference?</em>"</p>
+    <p>We implement this with a structured LLM-as-judge prompt that takes the locked reference image + the rendered shot + the brief, and produces a structured verdict:</p>
+
+    <pre data-label="agents/critique.py · the judge prompt"><code>CRITIQUE_RUBRIC = """
+You are a quality reviewer for a character-consistent ad pipeline.
+
+You will see:
+1. The LOCKED reference image of the character.
+2. The rendered shot.
+3. The shot brief.
+
+Score each dimension 0–1:
+- identity_match: Does the character in the shot look like the same person/mascot as the locked reference? Pay attention to face structure, hair, signature features, color palette.
+- brief_fidelity: Does the shot do what the brief said?
+- platform_compliance: Does it meet platform spec (aspect, duration, no broken artifacts)?
+
+Only return JSON. If identity_match < 0.75, set pass=false and regenerate_agent='03-scene'.
+"""</code></pre>
+
+    <div class="callout warn">
+      <span class="callout-label">The honest limit</span>
+      Even with all three layers, character consistency in current-gen video models is good, not perfect. A skilled customer will spot drift in 1 of every 8–10 shots. The Critique gate catches most of those before delivery. The ones it misses are why the brand voice promises "if Critique misses it and you reject it, we regenerate free." That promise is technically backed by the regen-count counter on state — we know exactly what we owe per job.
+    </div>
+
+    <h4>What we explicitly don't do (yet)</h4>
+    <ul>
+      <li>We don't train per-customer LoRAs. Too expensive at v1, locks us into one base model.</li>
+      <li>We don't use Stable Video Diffusion or open-source video models for production. Quality gap vs Runway/Kling is too wide for paying customers.</li>
+      <li>We don't allow more than 2 distinct characters in a single shot in v1. Multi-character consistency is a v2 problem and a different research domain.</li>
+    </ul>
+  </section>
+
+  <!-- §6 -->
+  <section id="s6">
+    <span class="section-num">§ 06 · ComfyUI</span>
+    <h2>Where ComfyUI fits — and where it <em>doesn't</em>.</h2>
+    <p>You mentioned ComfyUI as part of the stack. Let me be direct: <strong>ComfyUI is not the orchestrator.</strong> LangGraph is. ComfyUI is one of the things LangGraph calls.</p>
+
+    <table class="tbl">
+      <thead><tr><th>Tool</th><th>Job</th><th>Where it lives</th></tr></thead>
+      <tbody>
+        <tr><td><strong>LangGraph</strong></td><td>Orchestrates the whole job. Owns state, checkpoints, routing.</td><td>Python service, Cloudflare Workers or Supabase Edge.</td></tr>
+        <tr><td><strong>ComfyUI</strong></td><td>Executes complex multi-node image-gen workflows that we self-host (e.g. Flux + IP-Adapter + ControlNet chains).</td><td>Self-hosted on a single GPU box (₹40–80k/mo for an A100 instance, or rent per-hour from RunPod).</td></tr>
+        <tr><td><strong>Runway / Kling APIs</strong></td><td>Hosted video generation. We do not self-host these.</td><td>Vendor APIs called from Scene Renderer agent.</td></tr>
+        <tr><td><strong>Sarvam / ElevenLabs APIs</strong></td><td>Voice / dub / lip-sync.</td><td>Vendor APIs.</td></tr>
+        <tr><td><strong>FFmpeg + Remotion</strong></td><td>Final compositing &amp; aspect-ratio mux.</td><td>Same Python service or a separate worker.</td></tr>
+      </tbody>
+    </table>
+
+    <h4>When to use ComfyUI vs hosted APIs</h4>
+    <ul>
+      <li><strong>Use ComfyUI</strong> for the Identity Lock step. You need precise control over IP-Adapter weights, ControlNet conditioning, and seed. Hosted APIs hide too many knobs.</li>
+      <li><strong>Use ComfyUI</strong> for any image-gen step where we need a multi-node graph (mask + inpaint + upscale). fal.ai's Flux endpoint can't do that.</li>
+      <li><strong>Don't use ComfyUI</strong> for video generation. Self-hosting Runway-quality video is currently impossible without an enterprise contract and 8× H100s. Just call the API.</li>
+      <li><strong>Don't use ComfyUI</strong> as the orchestrator. It has its own workflow graph, but it's not designed for stateful, multi-vendor, multi-modal pipelines. You'll fight it.</li>
+    </ul>
+
+    <div class="callout">
+      <span class="callout-label">Practical pattern</span>
+      Wrap ComfyUI behind a thin FastAPI service. Each agent that needs ComfyUI just POSTs a workflow JSON to that service and polls for the result. From LangGraph's perspective, it looks identical to any other vendor API. This isolates ComfyUI's quirks from the orchestration layer.
+    </div>
+  </section>
+
+  <!-- §7 -->
+  <section id="s7">
+    <span class="section-num">§ 07 · Agent contracts</span>
+    <h2>Agent contracts &amp; the <em>critique gate</em>.</h2>
+    <p>Every agent implements the same interface. This is non-negotiable — it's what makes them swappable.</p>
+
+    <pre data-label="agents/base.py"><code>from abc import ABC, abstractmethod
+
+class Agent(ABC):
+    """Every agent is a pure function: state in, AgentResult out.
+    No agent mutates state directly — LangGraph reducers do that."""
+
+    agent_id: str
+    max_retries: int = 2
+    cost_ceiling_inr: float = 100.0   # per-call hard cap
+
+    @abstractmethod
+    async def run(self, state: JobState) -> dict:
+        """Returns a dict of state fields to merge.
+        Must include 'agent_log': [AgentResult]."""
+        ...
+
+    async def __call__(self, state: JobState) -> dict:
+        # Budget guard
+        if state.cost_so_far_inr + self.cost_ceiling_inr &gt; state.tier_cap_inr * 1.4:
+            return {
+                "final_status": "killed",
+                "kill_reason": f"{self.agent_id} would exceed budget",
+            }
+        return await self.run(state)</code></pre>
+
+    <h3>The Critique agent in particular</h3>
+    <p>It's the only agent that can route the graph backwards. It returns not just <code>AgentResult</code>, but a <code>CritiqueVerdict</code> that the conditional edge inspects to decide where to go next.</p>
+
+    <pre data-label="graph.py · the critique edge"><code>def route_after_critique(state: JobState) -> str:
+    last = state.critique_log[-1]
+    if last.pass_:
+        return "deliver"
+
+    # How many times have we already regenerated this agent?
+    agent = last.regenerate_agent
+    count = state.regen_count_by_agent.get(agent, 0)
+
+    if count &gt;= 2:
+        return "deliver_with_flag"   # ship it but mark it for review
+    return agent                       # send back to the failing agent</code></pre>
+
+    <p>The "deliver with flag" path matters. We don't infinitely regenerate. If after 2 attempts we still can't pass quality, we ship the best attempt with a quality flag in the customer-facing dashboard, and we eat the regen cost. This is a deliberate trade — better to ship something with a flag than spin forever burning API calls.</p>
+  </section>
+
+  <!-- §8 -->
+  <section id="s8">
+    <span class="section-num">§ 08 · Stack</span>
+    <h2>Tech stack — every <em>line item</em>.</h2>
+
+    <table class="tbl">
+      <thead><tr><th>Layer</th><th>Choice</th><th>Why this, not alternatives</th><th>Cost shape</th></tr></thead>
+      <tbody>
+        <tr><td>Language</td><td>Python 3.12</td><td>LangGraph is Python-first. ComfyUI is Python. The ML ecosystem is Python. Don't fight it.</td><td>Free</td></tr>
+        <tr><td>Orchestration</td><td>LangGraph 0.2+</td><td>See §02. State, checkpointing, HITL.</td><td>Free OSS</td></tr>
+        <tr><td>App framework</td><td>FastAPI</td><td>Async-native, type-hinted, plays well with Pydantic state schema.</td><td>Free</td></tr>
+        <tr><td>State store</td><td>Postgres (Supabase) + LangGraph PostgresSaver</td><td>Single-source-of-truth for jobs. Checkpoint table is auto-managed.</td><td>~₹2k/mo at MVP</td></tr>
+        <tr><td>Object storage</td><td>Cloudflare R2</td><td>S3-compatible, no egress fees. Critical at scale — every asset hits the customer's browser.</td><td>~₹500/TB/mo, no egress</td></tr>
+        <tr><td>Queue / async</td><td>Postgres pg-boss <em>or</em> Cloudflare Queues</td><td>Don't add Redis at v1. Postgres-as-queue is fine to ~10k jobs/day.</td><td>Free / negligible</td></tr>
+        <tr><td>LLM (planner + critique)</td><td>Claude Sonnet 4.6 primary, GPT-5 fallback</td><td>Critique fidelity is the moat. Sonnet's structured-output reliability matters more than Opus's raw smarts here. Budget for ₹15–60 per job.</td><td>API · variable</td></tr>
+        <tr><td>Image gen</td><td>Flux 1.1 Pro via fal.ai (hosted) + ComfyUI (self-host for IP-Adapter chains)</td><td>fal.ai for fast lookups; self-host ComfyUI for identity-lock complexity.</td><td>API · ₹2–10 per image; self-host ₹40–80k/mo</td></tr>
+        <tr><td>Video gen</td><td>Runway Gen-4 primary, Kling 2.0 secondary, Pika fallback</td><td>Multi-vendor routing protects against single-vendor price hikes.</td><td>API · ₹20–60 per 4-sec clip</td></tr>
+        <tr><td>Voice / dub</td><td>Sarvam AI for Indian languages, ElevenLabs Multilingual v2 for English/global</td><td>Sarvam is materially better for Telugu/Tamil/Hindi than US-built tools. Use the right tool per language.</td><td>API · ₹0.5–3 per minute</td></tr>
+        <tr><td>Lip-sync</td><td>Sync Labs API (preferred), Wav2Lip self-host (fallback)</td><td>Required only for presenter-style ads. Optional for mascot ads.</td><td>API · ₹15–40 per shot</td></tr>
+        <tr><td>Compositing / mux</td><td>FFmpeg + Remotion</td><td>FFmpeg for raw mux, Remotion for programmatic templated overlays.</td><td>Free OSS, GPU time only</td></tr>
+        <tr><td>Telemetry — LLM</td><td>Helicone</td><td>Per-job, per-agent token + cost tracking. Required to know our margins.</td><td>Free tier sufficient at MVP</td></tr>
+        <tr><td>Telemetry — product</td><td>PostHog (self-host or cloud)</td><td>Funnel, retention, regen rate per customer.</td><td>Free tier at MVP</td></tr>
+        <tr><td>Errors</td><td>Sentry</td><td>Required from day one.</td><td>Free tier</td></tr>
+        <tr><td>Frontend</td><td>Next.js 15 + Tailwind</td><td>Standard, fast, hires-friendly.</td><td>Free</td></tr>
+        <tr><td>Hosting (app)</td><td>Vercel (frontend) + Railway/Fly.io (Python service)</td><td>Edge-deploy frontend, persistent runtime for Python orchestrator.</td><td>~₹2k–8k/mo at MVP</td></tr>
+        <tr><td>Hosting (GPU)</td><td>RunPod or Vast.ai for ComfyUI</td><td>Per-hour rental until volume justifies a reserved A100.</td><td>₹40–60/hr per A100</td></tr>
+        <tr><td>Payments</td><td>Razorpay</td><td>Indian invoicing &amp; GST baked in. International via Stripe later.</td><td>~2% per txn</td></tr>
+      </tbody>
+    </table>
+
+    <h4>Stack hygiene rules</h4>
+    <ul>
+      <li>No Redis at v1. Postgres does queueing, caching, state. Adding Redis is a Year-2 problem.</li>
+      <li>No Kubernetes at v1. Railway / Fly.io is enough until 50+ paying customers.</li>
+      <li>No microservices. One Python service, multiple worker types. Decompose only when something specific demands it.</li>
+      <li>No ML infrastructure (Modal, Replicate's training tier, etc.) at v1. We're not training. We are calling.</li>
+    </ul>
+  </section>
+
+  <!-- §9 -->
+  <section id="s9">
+    <span class="section-num">§ 09 · Failure modes</span>
+    <h2>Failure modes &amp; recovery.</h2>
+    <table class="tbl">
+      <thead><tr><th>Failure</th><th>Detection</th><th>Recovery</th></tr></thead>
+      <tbody>
+        <tr><td>Vendor API timeout (Runway, Kling, etc.)</td><td>Per-call timeout in agent</td><td>Retry once with same vendor. If still fails, re-route to backup vendor (Pika). Log to Sentry.</td></tr>
+        <tr><td>Vendor API price hike mid-job</td><td>Helicone cost-per-call delta</td><td>Budget breaker kills job. Customer refunded credits. Engineer paged.</td></tr>
+        <tr><td>Critique drift — passing bad output</td><td>Customer rejection rate &gt; 15% / week</td><td>Tighten Critique rubric. Re-evaluate threshold. Possibly add a second-judge ensemble.</td></tr>
+        <tr><td>Identity Lock fails to converge</td><td>Critique returns identity_match &lt; 0.5 on first render</td><td>Re-run Identity Lock with different seed + ask customer for more reference images.</td></tr>
+        <tr><td>Postgres checkpoint corruption</td><td>LangGraph resume errors</td><td>Backup checkpoints to R2 hourly. Restore from backup. Notify customer of delay.</td></tr>
+        <tr><td>Budget breaker false-positive (kills good jobs)</td><td>Customer complaints + manual review</td><td>Adjust 1.4× multiplier. Add per-customer override.</td></tr>
+        <tr><td>HITL approval timeout (customer doesn't respond)</td><td>Job stuck &gt; 24h in pause state</td><td>Auto-cancel after 48h. Refund credits. Email customer.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §10 -->
+  <section id="s10">
+    <span class="section-num">§ 10 · Observability</span>
+    <h2>What to <em>instrument</em> first.</h2>
+    <p>Most engineering teams over-instrument. We will under-instrument and add as needed. Day-one minimum:</p>
+    <ol>
+      <li><strong>Per-job COGS</strong> — every agent writes its cost into the agent_log. Roll up to a dashboard per customer per week.</li>
+      <li><strong>Per-agent regeneration rate</strong> — if Scene Renderer is regenerating &gt;30% of the time, the Identity Lock is broken upstream.</li>
+      <li><strong>Critique pass rate by language</strong> — if Telugu lip-sync is passing 95% but Tamil is at 70%, we have a vendor-quality problem in one language.</li>
+      <li><strong>Customer rejection rate</strong> — assets that pass Critique but get rejected by the customer. This is the gap between our judgment and theirs. Closing it is the product roadmap.</li>
+      <li><strong>p50 / p95 job latency</strong> — promised SLA is 18h. If p95 drifts above 24h, we have an upstream bottleneck.</li>
+    </ol>
+    <p>Everything else is a distraction until we have customers using the system.</p>
+  </section>
+
+  <!-- §11 -->
+  <section id="s11">
+    <span class="section-num">§ 11 · Build sequence</span>
+    <h2>First 12 weeks.</h2>
+    <table class="tbl">
+      <thead><tr><th>Week</th><th>Deliverable</th><th>Done means</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Repo, Postgres, FastAPI scaffold, LangGraph hello-world</td><td>"START → DELIVERED" path runs end-to-end with mock agents</td></tr>
+        <tr><td>2</td><td>State schema + 01 Brief Parser (Claude)</td><td>Real customer brief → structured shot list</td></tr>
+        <tr><td>3</td><td>02 Identity Lock (ComfyUI + Flux + IP-Adapter)</td><td>Customer reference → locked image. Reusable across job.</td></tr>
+        <tr><td>4</td><td>03 Scene Renderer (Runway integration)</td><td>One shot, conditioned on locked image. Visible drift &lt; 25%.</td></tr>
+        <tr><td>5</td><td>04 Voice (Sarvam for Hindi + Telugu)</td><td>Multilingual VO synced to shot timing</td></tr>
+        <tr><td>6</td><td>05 Editor (FFmpeg + Remotion mux)</td><td>3 aspect ratios from one master</td></tr>
+        <tr><td>7</td><td>06 Critique gate</td><td>End-to-end test campaign passes Critique on first try in 60% of runs</td></tr>
+        <tr><td>8</td><td>HITL approval + budget breaker</td><td>Real customer can approve a brief in browser; over-budget jobs auto-kill</td></tr>
+        <tr><td>9</td><td>Customer dashboard (Next.js)</td><td>Submit brief → watch progress → download deliverables</td></tr>
+        <tr><td>10</td><td>Razorpay + tier credits</td><td>Customer can buy credits, jobs deduct against tier</td></tr>
+        <tr><td>11</td><td>3 design partners onboarded</td><td>Free tier, real briefs, weekly retros</td></tr>
+        <tr><td>12</td><td>First paid customer</td><td>Money in. v1 done.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §12 -->
+  <section id="s12">
+    <span class="section-num">§ 12 · The ruthless cut</span>
+    <h2>What I'd cut if forced to ship in <em>4 weeks</em>.</h2>
+    <p>This is the "what's truly load-bearing" test. If I had 4 weeks instead of 12:</p>
+    <ul>
+      <li><strong>Drop the dashboard.</strong> Customer emails brief, we email back assets via Drive link. No app at all.</li>
+      <li><strong>Drop multi-language.</strong> English-only at v0.1. Add Hindi at week 6.</li>
+      <li><strong>Drop multi-aspect.</strong> 9:16 only. Add 1:1 and 16:9 once one customer is paying.</li>
+      <li><strong>Drop the critique gate.</strong> I — the founder — am the critique. Manually review every asset before delivery for the first 20 jobs. Critique-as-LLM comes when manual review hits its limits.</li>
+      <li><strong>Drop budget breaker.</strong> First 20 jobs, I eat the cost variance personally and learn the COGS distribution.</li>
+      <li><strong>Drop HITL automation.</strong> I phone the customer to confirm the brief. Manual.</li>
+      <li><strong>Keep:</strong> LangGraph, state schema, Identity Lock, Scene Renderer, FFmpeg mux, Razorpay.</li>
+    </ul>
+    <div class="callout good">
+      <span class="callout-label">The lesson</span>
+      Everything cut above is a system replacement for the founder's manual labor. At &lt;20 jobs, the founder is cheaper than the system. After 20 jobs, automation pays for itself. Sequence matters: build the manual version first to learn the customer; then automate the parts that hurt most.
+    </div>
+  </section>
+
+  <footer>
+    <span>Architecture v0.1 · CTO memo · Internal</span>
+    <span>Decisions reviewable at week 4 · Stack reviewable at week 8</span>
+  </footer>
+
+</div>
+</body>
+</html>
