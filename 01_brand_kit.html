@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Studio Tantra — Brand Exploration Kit (Internal v0.1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiempos+Headline:wght@400;700&family=Söhne:wght@300;400;500;700&family=GT+Sectra:wght@400;700&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Portable design tokens — these survive a name change */
+    --ink: #0a0a0a;
+    --ink-2: #1f1f1f;
+    --ink-3: #404040;
+    --paper: #fafaf7;
+    --paper-2: #f0ede4;
+    --paper-3: #e6e1d2;
+    --accent: #d97706;          /* saffron — anchored in Indian heritage but reads as a confident editorial accent globally */
+    --accent-deep: #92400e;
+    --accent-soft: #fef3c7;
+    --signal-good: #166534;
+    --signal-warn: #a16207;
+    --rule: #1a1a1a;
+
+    --font-display: 'GT Sectra', 'Tiempos Headline', Georgia, serif;
+    --font-body: 'Geist', system-ui, -apple-system, sans-serif;
+    --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, monospace;
+    --font-accent: 'Instrument Serif', serif;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 56px 28px 120px;
+  }
+
+  /* WARNING BANNER — this artifact is exploratory */
+  .warning-banner {
+    background: #1a1a1a;
+    color: #fafaf7;
+    border-left: 6px solid var(--accent);
+    padding: 18px 24px;
+    margin-bottom: 56px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+  }
+  .warning-banner strong {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 64px;
+  }
+
+  /* Hero */
+  .hero {
+    margin-bottom: 100px;
+  }
+  .hero .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(56px, 9vw, 120px);
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    margin: 0 0 32px;
+    font-weight: 400;
+  }
+  .hero h1 em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .hero p {
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height: 1.4;
+    max-width: 640px;
+    color: var(--ink-2);
+    font-weight: 400;
+  }
+
+  /* Section */
+  section { margin-bottom: 96px; }
+  .section-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-family: var(--font-display);
+    font-size: clamp(34px, 4.5vw, 52px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin: 0 0 36px;
+    font-weight: 400;
+  }
+  h2 em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  h3 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    margin: 32px 0 12px;
+    color: var(--ink);
+  }
+  h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 24px 0 10px;
+    font-weight: 500;
+  }
+  p { margin: 0 0 16px; max-width: 680px; }
+
+  /* Logo display board */
+  .logo-board {
+    background: var(--paper-2);
+    border: 1px solid var(--paper-3);
+    padding: 80px 40px;
+    text-align: center;
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .logo-board.dark {
+    background: var(--ink);
+    border-color: var(--ink);
+  }
+  .logo-board.accent {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .logo-board::before {
+    content: attr(data-label);
+    position: absolute;
+    top: 14px;
+    left: 18px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+  .logo-board.dark::before { color: rgba(250,250,247,0.5); }
+  .logo-board.accent::before { color: rgba(255,255,255,0.7); }
+
+  /* Wordmark */
+  .wordmark {
+    font-family: var(--font-display);
+    font-size: 92px;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    font-weight: 400;
+    color: var(--ink);
+    display: inline-block;
+  }
+  .wordmark .studio {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 14px;
+    font-weight: 500;
+    color: var(--accent-deep);
+  }
+  .wordmark .name {
+    display: block;
+  }
+  .wordmark .name em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+  .logo-board.dark .wordmark { color: var(--paper); }
+  .logo-board.dark .wordmark .studio { color: var(--accent); }
+  .logo-board.dark .wordmark .name em { color: var(--accent); }
+  .logo-board.accent .wordmark { color: var(--paper); }
+  .logo-board.accent .wordmark .studio { color: rgba(255,255,255,0.85); }
+  .logo-board.accent .wordmark .name em { color: rgba(255,255,255,0.95); }
+
+  /* Logo grid */
+  .logo-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  @media (max-width: 760px) { .logo-grid { grid-template-columns: 1fr; } }
+
+  /* Monogram */
+  .monogram-row {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Color system */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    margin-bottom: 16px;
+  }
+  .swatch {
+    background: white;
+    padding: 28px 22px 20px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: var(--ink);
+  }
+  .swatch.dark { color: var(--paper); }
+  .swatch .role {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 6px;
+  }
+  .swatch .name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .swatch .hex {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    opacity: 0.85;
+  }
+
+  /* Typography specimen */
+  .type-specimen {
+    border: 1px solid var(--paper-3);
+    padding: 32px;
+    margin-bottom: 16px;
+    background: var(--paper);
+  }
+  .type-specimen .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 16px;
+  }
+  .type-specimen .display-sample {
+    font-family: var(--font-display);
+    font-size: 56px;
+    line-height: 1;
+    letter-spacing: -0.025em;
+    margin-bottom: 12px;
+    font-weight: 400;
+  }
+  .type-specimen .display-sample em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    color: var(--accent);
+  }
+  .type-specimen .body-sample {
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 640px;
+  }
+  .type-specimen .mono-sample {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .type-specimen .meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--paper-3);
+  }
+
+  /* Voice & tone table */
+  .tbl {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 16px 0;
+  }
+  .tbl th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    border-bottom: 2px solid var(--rule);
+    padding: 12px 16px 12px 0;
+    font-weight: 500;
+  }
+  .tbl td {
+    border-bottom: 1px solid var(--paper-3);
+    padding: 14px 16px 14px 0;
+    vertical-align: top;
+  }
+  .tbl td:first-child { font-weight: 500; }
+
+  /* Application mockups */
+  .app-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 24px 0;
+  }
+  @media (max-width: 760px) { .app-grid { grid-template-columns: 1fr; } }
+
+  .app-card {
+    border: 1px solid var(--paper-3);
+    background: white;
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Business card mockup */
+  .biz-card {
+    background: var(--paper-2);
+    height: 100%;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .biz-card .logo-mini {
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height: 1;
+  }
+  .biz-card .logo-mini em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    color: var(--accent);
+  }
+  .biz-card .logo-mini .studio-mini {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    display: block;
+    margin-bottom: 6px;
+  }
+  .biz-card .person {
+    font-family: var(--font-display);
+    font-size: 16px;
+    margin-bottom: 4px;
+  }
+  .biz-card .role {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-3);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-bottom: 12px;
+  }
+  .biz-card .contact {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--ink-2);
+    line-height: 1.7;
+  }
+
+  /* Dashboard mockup */
+  .dash-card {
+    background: var(--ink);
+    color: var(--paper);
+    height: 100%;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .dash-card .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2a2a2a;
+    padding-bottom: 10px;
+  }
+  .dash-card .top .logo-mini {
+    font-family: var(--font-display);
+    font-size: 16px;
+  }
+  .dash-card .top .logo-mini em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    color: var(--accent);
+  }
+  .dash-card .top .pill {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    background: var(--accent);
+    color: white;
+    padding: 3px 8px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .dash-card .agents {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+  }
+  .dash-card .agent-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 6px 0;
+    border-bottom: 1px dotted #2a2a2a;
+  }
+  .dash-card .agent-row .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--signal-good);
+    margin-right: 8px;
+  }
+  .dash-card .agent-row .right {
+    color: var(--ink-3);
+  }
+
+  /* Social post mockup */
+  .social-card {
+    background: var(--accent);
+    color: white;
+    height: 100%;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+  .social-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 90% 90%, rgba(255,255,255,0.15) 0%, transparent 40%);
+    pointer-events: none;
+  }
+  .social-card .quote {
+    font-family: var(--font-display);
+    font-size: 22px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    z-index: 1;
+    position: relative;
+  }
+  .social-card .quote em {
+    font-family: var(--font-accent);
+    font-style: italic;
+  }
+  .social-card .attr {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    z-index: 1;
+    position: relative;
+  }
+
+  /* Invoice mockup */
+  .invoice-card {
+    background: white;
+    height: 100%;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+  }
+  .invoice-card .top {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 10px;
+    margin-bottom: 8px;
+  }
+  .invoice-card .top .logo-mini {
+    font-family: var(--font-display);
+    font-size: 18px;
+  }
+  .invoice-card .top .logo-mini em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    color: var(--accent);
+  }
+  .invoice-card .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+  .invoice-card .row.total {
+    font-weight: 700;
+    border-top: 1px solid var(--rule);
+    margin-top: 6px;
+    padding-top: 8px;
+    font-size: 12px;
+  }
+  .invoice-card .row .agent {
+    color: var(--accent-deep);
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--rule);
+    margin-top: 80px;
+    padding-top: 24px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-3);
+    letter-spacing: 0.05em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .pill-inline {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 2px 8px;
+    background: var(--accent-soft);
+    color: var(--accent-deep);
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Honest warning banner -->
+  <div class="warning-banner">
+    <strong>⚠ Internal Brand Exploration Only · Read this First</strong>
+    Built per founder's request after the name "Studio Tantra" was flagged for serious commercial risks (SEO collision with adult-services category, Indian-market brand confusion with AAdi's Tantra Studio, Western-market connotation, likely brand-safety filtering on Meta/Google ads). These artifacts are <em>portable</em>: the color system, typography, agent iconography, and layout grid will survive a name change. Only the wordmark and monogram are name-specific. Treat this as a thinking aid, not a final identity.
+  </div>
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div>Brand Exploration · v0.1</div>
+    <div>Internal · Not for distribution</div>
+    <div>26 Apr 2026</div>
+  </header>
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="eyebrow">Brand Identity Kit</div>
+    <h1>An <em>orchestra</em><br/>of agents.</h1>
+    <p>A B2B AI media production platform built for Indian SMB ad shops, regional content studios, and D2C marketers. Where six specialist agents work in concert — and the founder doesn't.</p>
+  </div>
+
+  <!-- Section: Brand Idea -->
+  <section>
+    <span class="section-num">§ 01 · Brand idea</span>
+    <h2>The <em>orchestra</em>, not the soloist.</h2>
+    <p>Most "AI video" tools sell a single magic button. This brand sells the opposite: a <em>system of specialists</em>, each accountable for one part of the work — brief parsing, identity locking, scene rendering, dub, edit, critique. The brand voice is editorial and confident, not techno-futuristic. The visual language borrows from independent magazines and design-studio identities, not from SaaS dashboards or web3 chrome.</p>
+
+    <h4>Brand pillars</h4>
+    <ul>
+      <li><strong>Specialist over generalist.</strong> We name and credit each agent. We do not pretend a single model does everything.</li>
+      <li><strong>Production discipline.</strong> Every output passes through a critique gate. Quality is checked, not promised.</li>
+      <li><strong>Indian craft, global polish.</strong> We are built for Telugu, Tamil, Hindi, English. The output ships globally.</li>
+      <li><strong>Founder-led trust.</strong> No 24/7 chatbot. A human approves the brief and signs the invoice.</li>
+    </ul>
+  </section>
+
+  <!-- Section: Wordmark -->
+  <section>
+    <span class="section-num">§ 02 · Wordmark</span>
+    <h2>Wordmark <em>system</em>.</h2>
+    <p>The wordmark is built in two registers. <strong>Studio</strong> sits on top in monospaced caps — small, precise, structural. The product name sits below in editorial serif, with one letter italicized in saffron for character and asymmetry. The italicized letter is the brand's signature device. It survives reduction. It works in motion.</p>
+
+    <div class="logo-board" data-label="Primary · Light">
+      <span class="wordmark">
+        <span class="studio">Studio</span>
+        <span class="name">T<em>a</em>ntra</span>
+      </span>
+    </div>
+
+    <div class="logo-grid">
+      <div class="logo-board dark" data-label="Inverted · Dark">
+        <span class="wordmark" style="font-size: 56px;">
+          <span class="studio">Studio</span>
+          <span class="name">T<em>a</em>ntra</span>
+        </span>
+      </div>
+      <div class="logo-board accent" data-label="Branded surface">
+        <span class="wordmark" style="font-size: 56px;">
+          <span class="studio">Studio</span>
+          <span class="name">T<em>a</em>ntra</span>
+        </span>
+      </div>
+      <div class="logo-board" data-label="Mono · One-line">
+        <span style="font-family: var(--font-mono); font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 600;">
+          STUDIO · T<span style="font-family: var(--font-accent); font-style: italic; color: var(--accent); letter-spacing: 0; text-transform: lowercase;">a</span>NTRA
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Monogram / Mark -->
+  <section>
+    <span class="section-num">§ 03 · Monogram</span>
+    <h2>The <em>mark</em>.</h2>
+    <p>For app icons, favicons, agent badges, and watermarks. The monogram is built on a single italicized "a" inside a structural frame — a literal echo of the wordmark. The frame represents the orchestrator; the italic "a" represents the agent doing the work inside it.</p>
+
+    <div class="logo-board" data-label="Monogram set · Six surface treatments">
+      <div class="monogram-row">
+        <!-- Primary -->
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="76" height="76" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+          <text x="40" y="58" text-anchor="middle" font-family="GT Sectra, Tiempos, Georgia, serif" font-style="italic" font-size="60" fill="#d97706">a</text>
+        </svg>
+        <!-- Inverted -->
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="80" height="80" fill="#0a0a0a"/>
+          <rect x="2" y="2" width="76" height="76" fill="none" stroke="#fafaf7" stroke-width="2"/>
+          <text x="40" y="58" text-anchor="middle" font-family="GT Sectra, Tiempos, Georgia, serif" font-style="italic" font-size="60" fill="#d97706">a</text>
+        </svg>
+        <!-- Saffron -->
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="0" width="80" height="80" fill="#d97706"/>
+          <rect x="2" y="2" width="76" height="76" fill="none" stroke="#fafaf7" stroke-width="2"/>
+          <text x="40" y="58" text-anchor="middle" font-family="GT Sectra, Tiempos, Georgia, serif" font-style="italic" font-size="60" fill="#fafaf7">a</text>
+        </svg>
+        <!-- Outline only -->
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="76" height="76" fill="none" stroke="#0a0a0a" stroke-width="1"/>
+          <text x="40" y="58" text-anchor="middle" font-family="GT Sectra, Tiempos, Georgia, serif" font-style="italic" font-size="60" fill="none" stroke="#0a0a0a" stroke-width="1.2">a</text>
+        </svg>
+        <!-- Stamped -->
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="38" fill="none" stroke="#92400e" stroke-width="2"/>
+          <text x="40" y="58" text-anchor="middle" font-family="GT Sectra, Tiempos, Georgia, serif" font-style="italic" font-size="60" fill="#92400e">a</text>
+        </svg>
+        <!-- Tiny / favicon -->
+        <svg width="32" height="32" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2" y="2" width="76" height="76" fill="#0a0a0a"/>
+          <text x="40" y="60" text-anchor="middle" font-family="GT Sectra, Tiempos, Georgia, serif" font-style="italic" font-size="62" fill="#d97706">a</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: Agent System Iconography -->
+  <section>
+    <span class="section-num">§ 04 · Agent system</span>
+    <h2>Six agents, <em>six marks</em>.</h2>
+    <p>Each specialist agent gets its own glyph. The glyphs share a common geometric language — a 24×24 grid, single-weight strokes, one fill color, one accent. They sit inside the orchestrator frame. This iconography is what survives a name change unchanged — it's the most portable part of the system.</p>
+
+    <div class="logo-board" data-label="Six-agent glyph set">
+      <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 24px; align-items: center; justify-items: center;">
+
+        <!-- Brief Parser -->
+        <div style="text-align: center;">
+          <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="62" height="62" fill="none" stroke="#0a0a0a" stroke-width="1.5"/>
+            <line x1="14" y1="20" x2="50" y2="20" stroke="#0a0a0a" stroke-width="2"/>
+            <line x1="14" y1="28" x2="42" y2="28" stroke="#0a0a0a" stroke-width="2"/>
+            <line x1="14" y1="36" x2="46" y2="36" stroke="#0a0a0a" stroke-width="2"/>
+            <line x1="14" y1="44" x2="38" y2="44" stroke="#0a0a0a" stroke-width="2"/>
+            <circle cx="50" cy="44" r="3" fill="#d97706"/>
+          </svg>
+          <div style="font-family: var(--font-mono); font-size: 10px; margin-top: 10px; letter-spacing: 0.05em;">01 · Brief</div>
+        </div>
+
+        <!-- Identity Lock -->
+        <div style="text-align: center;">
+          <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="62" height="62" fill="none" stroke="#0a0a0a" stroke-width="1.5"/>
+            <circle cx="32" cy="28" r="10" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <circle cx="32" cy="28" r="3" fill="#d97706"/>
+            <path d="M 18 50 Q 32 38 46 50" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+          </svg>
+          <div style="font-family: var(--font-mono); font-size: 10px; margin-top: 10px; letter-spacing: 0.05em;">02 · Identity</div>
+        </div>
+
+        <!-- Scene Renderer -->
+        <div style="text-align: center;">
+          <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="62" height="62" fill="none" stroke="#0a0a0a" stroke-width="1.5"/>
+            <rect x="14" y="18" width="36" height="22" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <circle cx="22" cy="26" r="3" fill="#d97706"/>
+            <path d="M 14 40 L 26 30 L 36 36 L 50 24" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <line x1="20" y1="46" x2="44" y2="46" stroke="#0a0a0a" stroke-width="2"/>
+          </svg>
+          <div style="font-family: var(--font-mono); font-size: 10px; margin-top: 10px; letter-spacing: 0.05em;">03 · Scene</div>
+        </div>
+
+        <!-- Voice / Dub -->
+        <div style="text-align: center;">
+          <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="62" height="62" fill="none" stroke="#0a0a0a" stroke-width="1.5"/>
+            <line x1="18" y1="32" x2="18" y2="32" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+            <line x1="24" y1="26" x2="24" y2="38" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+            <line x1="30" y1="20" x2="30" y2="44" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+            <line x1="36" y1="24" x2="36" y2="40" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+            <line x1="42" y1="28" x2="42" y2="36" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+            <line x1="48" y1="32" x2="48" y2="32" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <div style="font-family: var(--font-mono); font-size: 10px; margin-top: 10px; letter-spacing: 0.05em;">04 · Voice</div>
+        </div>
+
+        <!-- Editor / Mux -->
+        <div style="text-align: center;">
+          <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="62" height="62" fill="none" stroke="#0a0a0a" stroke-width="1.5"/>
+            <rect x="12" y="20" width="14" height="10" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <rect x="28" y="20" width="10" height="10" fill="#d97706"/>
+            <rect x="40" y="20" width="12" height="10" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <rect x="12" y="34" width="20" height="10" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <rect x="34" y="34" width="18" height="10" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+          </svg>
+          <div style="font-family: var(--font-mono); font-size: 10px; margin-top: 10px; letter-spacing: 0.05em;">05 · Edit</div>
+        </div>
+
+        <!-- Critique / QA -->
+        <div style="text-align: center;">
+          <svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="62" height="62" fill="none" stroke="#92400e" stroke-width="2"/>
+            <circle cx="32" cy="32" r="14" fill="none" stroke="#0a0a0a" stroke-width="2"/>
+            <path d="M 24 32 L 30 38 L 42 24" fill="none" stroke="#d97706" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div style="font-family: var(--font-mono); font-size: 10px; margin-top: 10px; letter-spacing: 0.05em;">06 · Critique</div>
+        </div>
+
+      </div>
+    </div>
+    <p style="font-family: var(--font-mono); font-size: 12px; color: var(--ink-3); max-width: 720px;">Note: the Critique agent's frame is intentionally drawn in the saffron-deep color, signaling its role as the quality-gate authority. This is the only agent that can <em>reject</em> output and trigger a regeneration. Treating it as visually privileged in the brand reinforces the product positioning: every asset is checked, not promised.</p>
+  </section>
+
+  <!-- Section: Color -->
+  <section>
+    <span class="section-num">§ 05 · Color</span>
+    <h2>A <em>warm-paper</em> palette.</h2>
+    <p>Anchored in saffron — Indian heritage, but at a hue (#d97706) that reads as confident editorial accent globally, not as a flag-waving cliché. The neutrals are bone-paper, not pure white, to give the brand a tactile, printed-publication feel. Ink is true black for legibility. The signal colors stay muted to keep the system from feeling like a status dashboard.</p>
+
+    <div class="color-grid">
+      <div class="swatch" style="background: #d97706; color: #fafaf7;">
+        <div class="role">Primary · Saffron</div>
+        <div class="name">Saffron</div>
+        <div class="hex">#D97706</div>
+      </div>
+      <div class="swatch" style="background: #92400e; color: #fafaf7;">
+        <div class="role">Primary deep</div>
+        <div class="name">Burnt</div>
+        <div class="hex">#92400E</div>
+      </div>
+      <div class="swatch" style="background: #fef3c7;">
+        <div class="role">Primary tint</div>
+        <div class="name">Sand</div>
+        <div class="hex">#FEF3C7</div>
+      </div>
+      <div class="swatch dark" style="background: #0a0a0a;">
+        <div class="role">Ink</div>
+        <div class="name">Carbon</div>
+        <div class="hex">#0A0A0A</div>
+      </div>
+      <div class="swatch" style="background: #fafaf7;">
+        <div class="role">Paper</div>
+        <div class="name">Bone</div>
+        <div class="hex">#FAFAF7</div>
+      </div>
+      <div class="swatch" style="background: #f0ede4;">
+        <div class="role">Paper · 2</div>
+        <div class="name">Khadi</div>
+        <div class="hex">#F0EDE4</div>
+      </div>
+    </div>
+
+    <h4>Usage rules</h4>
+    <ul>
+      <li>Saffron earns its place — used for accents, italic letters, the Critique-agent frame, and primary CTAs only. Never as a body color, never on more than 10% of any surface.</li>
+      <li>Carbon is the default text color. Bone is the default surface. This is a reading brand first, an interface brand second.</li>
+      <li>Avoid gradients. Avoid drop shadows. Avoid glassmorphism. The brand is print-confident, not SaaS-glossy.</li>
+    </ul>
+  </section>
+
+  <!-- Section: Typography -->
+  <section>
+    <span class="section-num">§ 06 · Typography</span>
+    <h2>Three voices, <em>one editor</em>.</h2>
+
+    <div class="type-specimen">
+      <div class="label">Display · GT Sectra (with Instrument Serif italic)</div>
+      <div class="display-sample">An <em>orchestra</em> of agents.</div>
+      <div class="meta">Editorial serif. Used for hero, section headers, and the wordmark. The italicized accent letter is set in <em>Instrument Serif</em> for character. Available via Google Fonts as a free substitute if GT Sectra licensing is out of scope at MVP stage.</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="label">Body · Geist</div>
+      <div class="body-sample">Studio Tantra is built for the small Indian creative shop that needs to ship more campaign variants, in more regional languages, with character consistency that the customer doesn't have to manually fix. The agents work in concert. The founder approves the brief. The invoice arrives clean.</div>
+      <div class="meta">Vercel's open-source sans-serif. Free, modern, neutral. Pairs cleanly against Sectra without competing for attention.</div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="label">Mono · Geist Mono</div>
+      <div class="mono-sample">JOB_ID 7f3a92b1 · AGENT 03/scene · STATUS rendering · ETA 04:12 · COGS ₹147</div>
+      <div class="meta">Used for system metadata, agent badges, dashboard telemetry, invoice line items. Carries the technical layer of the brand without leaking into reading copy.</div>
+    </div>
+  </section>
+
+  <!-- Section: Voice -->
+  <section>
+    <span class="section-num">§ 07 · Voice &amp; tone</span>
+    <h2>Editorial confidence, <em>no hype</em>.</h2>
+    <table class="tbl">
+      <thead>
+        <tr><th>We sound like</th><th>We don't sound like</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"Six agents. One critique gate. Your campaign ships in 18 hours."</td>
+          <td>"Unleash the power of AI to revolutionize your creative workflow!"</td>
+        </tr>
+        <tr>
+          <td>"We do not generate full films. We generate ad campaigns."</td>
+          <td>"The future of filmmaking is here."</td>
+        </tr>
+        <tr>
+          <td>"Telugu, Tamil, Hindi, Marathi, Kannada, Bangla, English. In that order of release."</td>
+          <td>"Reach a global audience in any language!"</td>
+        </tr>
+        <tr>
+          <td>"If the Critique agent rejects an asset, we regenerate at no charge."</td>
+          <td>"Premium quality, every time, guaranteed!"</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4>Three rules for any copy</h4>
+    <ol>
+      <li><strong>Specific over evocative.</strong> Numbers, agent names, language lists. Never "transformative."</li>
+      <li><strong>What we don't do is part of what we do.</strong> Saying "we don't generate full films" is positioning, not weakness.</li>
+      <li><strong>The customer is competent.</strong> No condescension. No emoji. No exclamation marks.</li>
+    </ol>
+  </section>
+
+  <!-- Section: Applications -->
+  <section>
+    <span class="section-num">§ 08 · Applications</span>
+    <h2>The <em>system</em> applied.</h2>
+    <p>Four surfaces tested below. The wordmark scales. The agent glyphs travel. The saffron stays under 10%.</p>
+
+    <div class="app-grid">
+
+      <!-- Business card -->
+      <div class="app-card">
+        <div class="biz-card">
+          <div>
+            <div class="logo-mini">
+              <span class="studio-mini">Studio</span>
+              T<em>a</em>ntra
+            </div>
+          </div>
+          <div>
+            <div class="person">[Founder name]</div>
+            <div class="role">Founder · Producer</div>
+            <div class="contact">
+              hello@[domain] <br/>
+              +91 ·· ··· ···· <br/>
+              Hyderabad / Bengaluru
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dashboard -->
+      <div class="app-card">
+        <div class="dash-card">
+          <div class="top">
+            <div class="logo-mini">St<em>u</em>dio·T<em>a</em>ntra</div>
+            <div class="pill">Live</div>
+          </div>
+          <div class="agents">
+            <div class="agent-row"><span><span class="dot"></span>01 · BRIEF</span><span class="right">parsed · 0.4s</span></div>
+            <div class="agent-row"><span><span class="dot"></span>02 · IDENTITY</span><span class="right">locked · 8 refs</span></div>
+            <div class="agent-row"><span><span class="dot"></span>03 · SCENE</span><span class="right">3 of 4 · 47s</span></div>
+            <div class="agent-row"><span><span class="dot" style="background:#a16207;"></span>04 · VOICE</span><span class="right">queued · te-IN</span></div>
+            <div class="agent-row"><span><span class="dot" style="background:#404040;"></span>05 · EDIT</span><span class="right">waiting</span></div>
+            <div class="agent-row"><span><span class="dot" style="background:#404040;"></span>06 · CRITIQUE</span><span class="right">waiting</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social post -->
+      <div class="app-card">
+        <div class="social-card">
+          <div class="quote">Six agents.<br/>One <em>critique</em> gate.<br/>Eighteen hours.</div>
+          <div class="attr">Studio Tantra · Campaign Pipeline</div>
+        </div>
+      </div>
+
+      <!-- Invoice -->
+      <div class="app-card">
+        <div class="invoice-card">
+          <div class="top">
+            <div class="logo-mini">St<em>u</em>dio·T<em>a</em>ntra</div>
+            <div style="text-align: right;">INV-0042<br/>26 Apr 26</div>
+          </div>
+          <div class="row"><span>Campaign · "Ramzan ED-2"</span><span></span></div>
+          <div class="row"><span class="agent">01 · Brief</span><span>₹6</span></div>
+          <div class="row"><span class="agent">02 · Identity ×3</span><span>₹38</span></div>
+          <div class="row"><span class="agent">03 · Scene ×4</span><span>₹164</span></div>
+          <div class="row"><span class="agent">04 · Voice (te-IN)</span><span>₹11</span></div>
+          <div class="row"><span class="agent">05 · Edit ×3 aspect</span><span>₹14</span></div>
+          <div class="row"><span class="agent">06 · Critique</span><span>₹8</span></div>
+          <div class="row total"><span>Asset total</span><span>₹241</span></div>
+          <div class="row" style="font-size:9px;color:var(--ink-3);"><span>Customer charge (Studio tier)</span><span>₹250</span></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Section: Portability -->
+  <section>
+    <span class="section-num">§ 09 · Portability — read this last</span>
+    <h2>What survives a <em>name change</em>.</h2>
+    <table class="tbl">
+      <thead><tr><th>Element</th><th>Name-coupled?</th><th>Survives a rename?</th></tr></thead>
+      <tbody>
+        <tr><td>Saffron + carbon + bone color system</td><td>No</td><td><span class="pill-inline">Yes — keep</span></td></tr>
+        <tr><td>GT Sectra + Geist + Geist Mono type stack</td><td>No</td><td><span class="pill-inline">Yes — keep</span></td></tr>
+        <tr><td>Six-agent glyph system</td><td>No</td><td><span class="pill-inline">Yes — keep</span></td></tr>
+        <tr><td>Editorial layout grid + dashboard pattern</td><td>No</td><td><span class="pill-inline">Yes — keep</span></td></tr>
+        <tr><td>Voice &amp; tone rules</td><td>No</td><td><span class="pill-inline">Yes — keep</span></td></tr>
+        <tr><td>Wordmark (Studio + name)</td><td>Yes</td><td>Rebuild — 1 day's work</td></tr>
+        <tr><td>Monogram (italic 'a' in frame)</td><td>Partially</td><td>Adapt — italic letter changes to whatever the new name's signature letter is</td></tr>
+        <tr><td>Domain, social handles, brand assets</td><td>Yes</td><td>Rebuild from scratch</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 24px;"><strong>The point:</strong> if you do switch names, ~70% of this system carries forward. The italicized accent-letter device, the saffron palette, the agent glyph system, the typography pairing, the voice rules — all of these are conceptually independent of the word "Tantra." That's deliberate. It's also the most generous thing I can offer given my disagreement with the name.</p>
+  </section>
+
+  <footer>
+    <span>Studio Tantra · Brand Exploration v0.1 · Internal</span>
+    <span>Designed to be portable · 70% survives a rename</span>
+  </footer>
+
+</div>
+</body>
+</html>
