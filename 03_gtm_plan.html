@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Studio Tantra — Founder Operating Plan v0.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=GT+Sectra:wght@400;700&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700;800;900&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --ink-2: #1f1f1f;
+    --ink-3: #525252;
+    --paper: #fafaf7;
+    --paper-2: #f0ede4;
+    --paper-3: #e6e1d2;
+    --accent: #d97706;
+    --accent-deep: #92400e;
+    --accent-soft: #fef3c7;
+    --good: #166534;
+    --warn: #a16207;
+    --kill: #991b1b;
+    --rule: #1a1a1a;
+    --font-display: 'GT Sectra', Georgia, serif;
+    --font-body: 'Geist', system-ui, sans-serif;
+    --font-mono: 'Geist Mono', ui-monospace, monospace;
+    --font-accent: 'Instrument Serif', serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: var(--font-body); font-size: 15px; line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 56px 28px 120px; }
+
+  /* Warning banner */
+  .warning-banner {
+    background: #1a1a1a; color: #fafaf7;
+    border-left: 6px solid var(--accent);
+    padding: 16px 22px; margin-bottom: 48px;
+    font-family: var(--font-mono); font-size: 11px; line-height: 1.6;
+  }
+  .warning-banner strong {
+    display: block; font-size: 10px; letter-spacing: 0.2em;
+    color: var(--accent); margin-bottom: 6px; text-transform: uppercase;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-bottom: 1px solid var(--rule); padding-bottom: 24px; margin-bottom: 56px;
+    display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: end;
+  }
+  .masthead .pub {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.2em; color: var(--ink-3);
+  }
+  .masthead h1 {
+    grid-column: 1 / -1;
+    font-family: var(--font-display); font-size: clamp(44px, 6.5vw, 76px);
+    line-height: 0.95; letter-spacing: -0.025em; margin: 14px 0 0; font-weight: 400;
+  }
+  .masthead h1 em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent);
+  }
+
+  /* Standfirst */
+  .standfirst {
+    font-family: var(--font-display); font-size: 22px; line-height: 1.45;
+    color: var(--ink-2); border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 22px; margin: 0 0 64px; max-width: 720px; font-weight: 400;
+  }
+  .standfirst em { font-family: var(--font-accent); font-style: italic; color: var(--accent); }
+
+  /* Hero block: Mission / Vision / NSM */
+  .triptych {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+    background: var(--rule); border: 1px solid var(--rule);
+    margin-bottom: 80px;
+  }
+  @media (max-width: 800px) { .triptych { grid-template-columns: 1fr; } }
+  .triptych-cell {
+    background: var(--paper); padding: 32px 28px; min-height: 240px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .triptych-cell.dark { background: var(--ink); color: var(--paper); }
+  .triptych-cell.accent { background: var(--accent); color: white; }
+  .triptych-cell .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.25em;
+    text-transform: uppercase; opacity: 0.7;
+  }
+  .triptych-cell .body-text {
+    font-family: var(--font-display); font-size: 22px; line-height: 1.25;
+    margin: 18px 0 0; font-weight: 400;
+  }
+  .triptych-cell.dark .body-text em,
+  .triptych-cell.accent .body-text em {
+    font-family: var(--font-accent); font-style: italic;
+    color: var(--accent-soft);
+  }
+  .triptych-cell:not(.dark):not(.accent) .body-text em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent);
+  }
+  .triptych-cell .footnote {
+    font-family: var(--font-mono); font-size: 11px; opacity: 0.7;
+    margin-top: 18px; line-height: 1.5;
+  }
+
+  /* Sections */
+  section { margin-bottom: 80px; scroll-margin-top: 24px; }
+  .section-num {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.25em;
+    color: var(--accent); text-transform: uppercase; display: block; margin-bottom: 8px;
+  }
+  h2 {
+    font-family: var(--font-display); font-size: clamp(32px, 4vw, 46px);
+    line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 28px; font-weight: 400;
+    border-bottom: 1px solid var(--rule); padding-bottom: 14px;
+  }
+  h2 em { font-family: var(--font-accent); font-style: italic; color: var(--accent); }
+  h3 {
+    font-family: var(--font-body); font-weight: 600; font-size: 19px;
+    margin: 28px 0 12px; letter-spacing: -0.01em;
+  }
+  h4 {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-3); margin: 22px 0 10px; font-weight: 500;
+  }
+  p { margin: 0 0 14px; max-width: 720px; }
+  ul, ol { padding-left: 22px; margin: 0 0 18px; max-width: 720px; }
+  li { margin-bottom: 8px; }
+  strong { font-weight: 600; color: var(--ink); }
+  em { color: var(--accent-deep); }
+
+  /* Big quote */
+  .pull-quote {
+    margin: 32px 0;
+    padding: 28px 32px;
+    border-left: 4px solid var(--accent);
+    background: var(--accent-soft);
+    font-family: var(--font-display);
+    font-size: 24px;
+    line-height: 1.35;
+    font-weight: 400;
+  }
+  .pull-quote em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent-deep);
+  }
+
+  /* Niche cards */
+  .niche-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin: 24px 0;
+  }
+  @media (max-width: 800px) { .niche-grid { grid-template-columns: 1fr; } }
+  .niche-card {
+    border: 1px solid var(--paper-3);
+    background: var(--paper);
+    padding: 28px 24px;
+    display: flex; flex-direction: column; gap: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+  .niche-card .rank {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+    color: var(--accent); text-transform: uppercase;
+  }
+  .niche-card h3 {
+    font-family: var(--font-display); font-size: 26px; line-height: 1.1;
+    margin: 0; font-weight: 400; letter-spacing: -0.01em;
+  }
+  .niche-card h3 em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent);
+  }
+  .niche-card .one-liner {
+    font-size: 13px; color: var(--ink-2);
+    border-bottom: 1px solid var(--paper-3); padding-bottom: 12px;
+  }
+  .niche-card .meta-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.05em;
+    color: var(--ink-3);
+  }
+  .niche-card .meta-grid div span {
+    display: block; color: var(--ink); font-weight: 600; margin-top: 2px;
+    letter-spacing: 0;
+  }
+  .niche-card .why {
+    font-size: 13px; color: var(--ink-2); line-height: 1.5;
+    margin-top: auto;
+  }
+  .niche-card.featured {
+    background: var(--ink); color: var(--paper);
+    border-color: var(--ink);
+  }
+  .niche-card.featured h3 { color: var(--paper); }
+  .niche-card.featured .rank { color: var(--accent); }
+  .niche-card.featured .one-liner { color: rgba(250,250,247,0.85); border-bottom-color: rgba(250,250,247,0.15); }
+  .niche-card.featured .meta-grid { color: rgba(250,250,247,0.7); }
+  .niche-card.featured .meta-grid div span { color: var(--paper); }
+  .niche-card.featured .why { color: rgba(250,250,247,0.85); }
+
+  /* Roadmap */
+  .roadmap {
+    background: var(--paper-2); border: 1px solid var(--paper-3);
+    padding: 32px 28px; margin: 24px 0;
+  }
+  .roadmap-row {
+    display: grid; grid-template-columns: 90px 1fr 200px;
+    gap: 24px; padding: 20px 0; align-items: start;
+    border-bottom: 1px solid var(--paper-3);
+  }
+  .roadmap-row:last-child { border-bottom: none; }
+  .roadmap-row .quarter {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em;
+    color: var(--accent-deep); font-weight: 600; text-transform: uppercase;
+    padding-top: 4px;
+  }
+  .roadmap-row .theme {
+    font-family: var(--font-display); font-size: 22px; line-height: 1.2;
+    font-weight: 400; letter-spacing: -0.01em;
+  }
+  .roadmap-row .theme em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent);
+  }
+  .roadmap-row .theme p {
+    font-family: var(--font-body); font-size: 14px; color: var(--ink-2);
+    line-height: 1.55; margin-top: 8px;
+  }
+  .roadmap-row .targets {
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--ink-3); line-height: 1.7;
+  }
+  .roadmap-row .targets strong {
+    color: var(--ink); display: block; font-size: 16px;
+    font-family: var(--font-display); font-weight: 700; letter-spacing: -0.01em;
+  }
+  @media (max-width: 760px) {
+    .roadmap-row { grid-template-columns: 1fr; gap: 8px; }
+  }
+
+  /* KPI grid */
+  .kpi-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1px; background: var(--rule); border: 1px solid var(--rule);
+    margin: 20px 0;
+  }
+  .kpi-card {
+    background: var(--paper); padding: 22px 20px;
+  }
+  .kpi-card .label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--ink-3);
+  }
+  .kpi-card .value {
+    font-family: var(--font-display); font-size: 30px; line-height: 1;
+    margin: 8px 0 6px; font-weight: 400;
+  }
+  .kpi-card .value em {
+    font-family: var(--font-accent); font-style: italic; color: var(--accent);
+  }
+  .kpi-card .desc {
+    font-size: 12px; color: var(--ink-2); line-height: 1.45;
+  }
+  .kpi-card.featured { background: var(--accent); color: white; }
+  .kpi-card.featured .label { color: rgba(255,255,255,0.85); }
+  .kpi-card.featured .desc { color: rgba(255,255,255,0.92); }
+
+  /* Tables */
+  .tbl {
+    width: 100%; border-collapse: collapse; font-size: 14px; margin: 18px 0;
+  }
+  .tbl th {
+    text-align: left; font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3);
+    border-bottom: 2px solid var(--rule); padding: 10px 12px 10px 0;
+    font-weight: 500; vertical-align: bottom;
+  }
+  .tbl td {
+    border-bottom: 1px solid var(--paper-3); padding: 12px 12px 12px 0;
+    vertical-align: top;
+  }
+  .pill {
+    display: inline-block; font-family: var(--font-mono); font-size: 10px;
+    padding: 2px 8px; letter-spacing: 0.05em; border-radius: 2px;
+  }
+  .pill-good { background: #d1fae5; color: var(--good); }
+  .pill-warn { background: #fef3c7; color: var(--warn); }
+  .pill-kill { background: #fee2e2; color: var(--kill); }
+
+  /* Callouts */
+  .callout {
+    margin: 22px 0; padding: 18px 22px;
+    border-left: 4px solid var(--accent);
+    background: var(--accent-soft);
+    font-size: 14px;
+  }
+  .callout.warn { border-left-color: var(--warn); background: #fef3c7; }
+  .callout.kill { border-left-color: var(--kill); background: #fee2e2; }
+  .callout.good { border-left-color: var(--good); background: #d1fae5; }
+  .callout-label {
+    font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--accent-deep); margin-bottom: 6px;
+    display: block; font-weight: 600;
+  }
+  .callout.warn .callout-label { color: var(--warn); }
+  .callout.kill .callout-label { color: var(--kill); }
+  .callout.good .callout-label { color: var(--good); }
+
+  /* Funnel viz */
+  .funnel {
+    background: var(--paper-2); padding: 28px;
+    border: 1px solid var(--paper-3);
+    margin: 24px 0;
+  }
+  .funnel-row {
+    display: grid; grid-template-columns: 200px 1fr 100px;
+    gap: 16px; align-items: center; padding: 8px 0;
+  }
+  .funnel-row .stage {
+    font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-2);
+  }
+  .funnel-row .bar {
+    height: 32px; background: var(--accent);
+    display: flex; align-items: center; padding: 0 14px;
+    color: white; font-family: var(--font-mono); font-size: 11px;
+    font-weight: 600;
+  }
+  .funnel-row.outcome .bar { background: var(--good); }
+  .funnel-row .num {
+    font-family: var(--font-display); font-size: 22px;
+    font-weight: 400; text-align: right; line-height: 1;
+  }
+
+  /* TOC */
+  .toc {
+    background: var(--paper-2); border: 1px solid var(--paper-3);
+    padding: 22px 28px; margin-bottom: 56px;
+  }
+  .toc h4 { margin-top: 0; }
+  .toc ol { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 28px; }
+  .toc li {
+    padding: 5px 0; font-size: 14px; break-inside: avoid; counter-increment: toc;
+  }
+  .toc { counter-reset: toc; }
+  .toc li::before {
+    content: counter(toc, decimal-leading-zero) " — ";
+    font-family: var(--font-mono); font-size: 10px; color: var(--accent);
+  }
+  .toc a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted transparent; }
+  .toc a:hover { border-bottom-color: var(--accent); color: var(--accent-deep); }
+  @media (max-width: 700px) { .toc ol { columns: 1; } }
+
+  footer {
+    border-top: 1px solid var(--rule); margin-top: 80px;
+    padding-top: 22px; font-family: var(--font-mono); font-size: 11px;
+    color: var(--ink-3); display: flex; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px; letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Warning banner -->
+  <div class="warning-banner">
+    <strong>⚠ Honest framing inside</strong>
+    Written as a founder operating plan, not a visionary CEO manifesto. Vision is real but earned through customer truth, not asserted upfront. Name "Studio Tantra" used per founder request — see brand kit v0.1 for unresolved naming concerns. This document is for one reader (the founder) and is the artifact that should sit on the wall, not in a pitch deck.
+  </div>
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="pub">Founder Plan · Internal · v0.1</div>
+    <div></div>
+    <div class="pub">12-Month Horizon · 26 Apr 2026</div>
+    <h1>Studio <em>Tantra</em> — The 12-Month Operating Plan</h1>
+  </header>
+
+  <!-- Standfirst -->
+  <p class="standfirst">
+    The vision is large. The first 365 days are not. This document holds both: the
+    <em>why</em> we exist (a 5-year claim), and the <em>what</em> we ship next Tuesday
+    (a one-week claim). Every quarter is a checkpoint where Tuesday earns the right to
+    be five years.
+  </p>
+
+  <!-- Mission / Vision / North Star — the triptych -->
+  <div class="triptych">
+    <div class="triptych-cell">
+      <div class="label">§ Mission</div>
+      <div class="body-text">Give every Indian SMB the <em>output of an ad shop</em> without the overhead of one.</div>
+      <div class="footnote">What we do, every day, for whoever paid us this week.</div>
+    </div>
+    <div class="triptych-cell dark">
+      <div class="label">§ Vision · 2031</div>
+      <div class="body-text">Indian regional creators ship <em>more localized, more consistent</em> ads than US studios — because their tools were built for them, not adapted from English.</div>
+      <div class="footnote">A 5-year claim. Earned through the customers we sign in Year 1.</div>
+    </div>
+    <div class="triptych-cell accent">
+      <div class="label">§ North Star</div>
+      <div class="body-text"><em>Approved Assets per Customer per Week (AAPCW).</em></div>
+      <div class="footnote">An asset the customer downloaded AND used. Not generated. Not delivered. Used.</div>
+    </div>
+  </div>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <h4>Contents</h4>
+    <ol>
+      <li><a href="#s1">The 'Why' — what we're really selling</a></li>
+      <li><a href="#s2">The disruption story (honest version)</a></li>
+      <li><a href="#s3">The North Star metric, explained</a></li>
+      <li><a href="#s4">Three Blue Ocean niches</a></li>
+      <li><a href="#s5">Pick one: the launch wedge</a></li>
+      <li><a href="#s6">Quarterly roadmap — the four arcs</a></li>
+      <li><a href="#s7">KPIs by quarter — the contract with myself</a></li>
+      <li><a href="#s8">The funnel — where revenue actually comes from</a></li>
+      <li><a href="#s9">The motion — how we sell, week by week</a></li>
+      <li><a href="#s10">What I would NOT do this year</a></li>
+      <li><a href="#s11">Kill criteria — pre-committed</a></li>
+      <li><a href="#s12">Twelve months from now — the look-back test</a></li>
+    </ol>
+  </nav>
+
+  <!-- §1 -->
+  <section id="s1">
+    <span class="section-num">§ 01 · The why</span>
+    <h2>What we're <em>actually</em> selling.</h2>
+    <p>We are not selling AI. We are not selling agents. We are not selling video. The customer is buying:</p>
+    <ul>
+      <li><strong>Throughput.</strong> A 6-person Hyderabad ad shop ships ~40 ad creatives a month. With us they ship 200. Same team, no new hires.</li>
+      <li><strong>Language coverage they can't afford to staff.</strong> Telugu, Tamil, Marathi, Bangla — they can't keep voice talent on retainer for each. We can.</li>
+      <li><strong>Character consistency they can't get from Runway alone.</strong> Their D2C clients reject inconsistent mascots. We solve it.</li>
+      <li><strong>Predictable cost per asset.</strong> ₹250 each, billed Friday. Not three vendors and four invoices.</li>
+    </ul>
+    <p>The "AI agent factory" is the <em>how</em>, not the <em>what</em>. The customer doesn't care whether six agents or one model produces the asset. They care whether the asset reads as on-brand and ships on time.</p>
+
+    <div class="pull-quote">
+      The product is throughput. The agents are <em>plumbing</em>. The pitch is "your D2C client wants 30 variants in 5 languages by Friday — say yes."
+    </div>
+  </section>
+
+  <!-- §2 -->
+  <section id="s2">
+    <span class="section-num">§ 02 · Disruption — honest</span>
+    <h2>The <em>disruption</em> story — but not the one in the brief.</h2>
+    <p>The brief asked: how do we disrupt the traditional agency model? I'm rejecting that framing because agencies are our customers, not our targets. Here's the disruption that's actually true:</p>
+
+    <table class="tbl">
+      <thead><tr><th>Layer</th><th>Old world</th><th>What we change</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>The cost of an ad creative</td>
+          <td>₹3,000–₹15,000 per asset (freelancer + editor + voice)</td>
+          <td>₹250–₹400. The vendor stack collapses into one invoice.</td>
+        </tr>
+        <tr>
+          <td>The unit of work</td>
+          <td>"A campaign" — billed per project, slow, scopey</td>
+          <td>"An asset" — billed per credit, fast, atomic</td>
+        </tr>
+        <tr>
+          <td>The constraint on language coverage</td>
+          <td>Voice talent + dub studio per language</td>
+          <td>API call, ₹3 per minute, 8 languages on day one</td>
+        </tr>
+        <tr>
+          <td>The agency's economics</td>
+          <td>Margin from staff utilization</td>
+          <td>Margin from <em>tool leverage</em>. The 6-person shop competes with the 25-person shop.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Who actually gets disrupted:</strong> not "agencies." It's <em>the staff inside agencies who do work that's now done by tools</em> — specifically, junior video editors, voice-over freelancers in regional languages, and storyboard artists. The agency itself, if it adopts us, gets stronger. The agency that doesn't adopt us is the one that gets disrupted — but it's disrupted by us only via the agency next door.</p>
+
+    <div class="callout warn">
+      <span class="callout-label">The thing not to say in any pitch</span>
+      Never tell an ad-shop founder you're disrupting them. Tell them you're the reason they outpriced the larger agency in the next building. Same product, different positioning. Pick the one that closes.
+    </div>
+  </section>
+
+  <!-- §3 -->
+  <section id="s3">
+    <span class="section-num">§ 03 · North Star</span>
+    <h2>The <em>one number</em> that decides if this is working.</h2>
+
+    <div class="kpi-grid">
+      <div class="kpi-card featured">
+        <div class="label">North Star — AAPCW</div>
+        <div class="value">Approved<br/>Assets / Customer / Week</div>
+        <div class="desc">An asset the customer downloaded AND used. Not generated. Not delivered. <strong>Used.</strong></div>
+      </div>
+    </div>
+
+    <h4>Why this metric, not the obvious ones</h4>
+    <table class="tbl">
+      <thead><tr><th>Tempting NSM</th><th>Why I'm rejecting it</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>MRR / ARR</td>
+          <td>Lagging. Trails reality by 60–90 days. A bad product with good sales hits ARR targets and dies the next quarter.</td>
+        </tr>
+        <tr>
+          <td>Assets generated</td>
+          <td>Vanity. We can generate millions and have no business if customers don't ship them.</td>
+        </tr>
+        <tr>
+          <td>Active customers</td>
+          <td>Doesn't separate the customer who pays ₹4,999 and uses 2 assets from the one who pays ₹39,999 and uses 180.</td>
+        </tr>
+        <tr>
+          <td>Critique pass rate</td>
+          <td>Our judgment of our own work. The customer's judgment is what matters.</td>
+        </tr>
+        <tr>
+          <td>NPS</td>
+          <td>What people say. AAPCW is what they do.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Why AAPCW works.</strong> If we're producing assets the customer actually ships, three things must be true: the quality is good enough, the cost is justifiable, and the workflow fits how they work. If any of those breaks, AAPCW drops first — before MRR, before NPS, before churn shows up. It's the earliest possible signal of product–market fit and the earliest possible signal of failure.</p>
+
+    <h4>Targets — by month</h4>
+    <table class="tbl">
+      <thead><tr><th>Month</th><th>AAPCW target</th><th>What this implies</th></tr></thead>
+      <tbody>
+        <tr><td>M3 (3 design partners)</td><td>2.0</td><td>They're using us for "test campaigns" — proof of concept</td></tr>
+        <tr><td>M6 (5 paying customers)</td><td>4.0</td><td>We're inside one workflow, real money flowing</td></tr>
+        <tr><td>M9 (15 paying customers)</td><td>6.5</td><td>We are a default tool, not a side experiment</td></tr>
+        <tr><td>M12 (30 paying customers)</td><td>8.0</td><td>One asset every workday per customer. Embedded.</td></tr>
+      </tbody>
+    </table>
+
+    <p>If by M9 average AAPCW is below 4, the product is not embedding. We don't fix this with marketing. We fix it by going on-site to two customers and watching them work for a day.</p>
+  </section>
+
+  <!-- §4 -->
+  <section id="s4">
+    <span class="section-num">§ 04 · Blue Ocean</span>
+    <h2>Three <em>Blue Ocean</em> niches.</h2>
+    <p>"Blue Ocean" means a market segment where the competitive set isn't another AI video tool — it's the absence of any tool, or the absence of a tool that speaks the customer's language. I've ranked these in order of fit, not size.</p>
+
+    <div class="niche-grid">
+
+      <!-- Niche 1 -->
+      <div class="niche-card featured">
+        <div class="rank">Niche 01 · Lead</div>
+        <h3><em>Regional</em>-Language D2C Performance Ad Shops</h3>
+        <div class="one-liner">Hyderabad &amp; Bengaluru ad shops serving Telugu/Tamil-speaking D2C brands</div>
+        <div class="meta-grid">
+          <div>ICP size<span>~400 shops</span></div>
+          <div>Avg ticket<span>₹15k–₹40k/mo</span></div>
+          <div>Sales motion<span>Founder-led</span></div>
+          <div>CAC<span>~₹3k</span></div>
+        </div>
+        <div class="why">
+          <strong>Why blue:</strong> US tools (HeyGen, Synthesia, Captions) are weak on Telugu/Tamil dub. Pixis and Rocketium go enterprise. Local agencies have no AI-native tool built for their workflow. We're the only sharp option.
+        </div>
+      </div>
+
+      <!-- Niche 2 -->
+      <div class="niche-card">
+        <div class="rank">Niche 02 · Adjacent</div>
+        <h3>Indian <em>Coaching</em> Creators (Finance, Career, Exam Prep)</h3>
+        <div class="one-liner">TagMango / Graphy / Rigi creators producing daily explainer reels</div>
+        <div class="meta-grid">
+          <div>ICP size<span>~50k creators</span></div>
+          <div>Avg ticket<span>₹3k–₹12k/mo</span></div>
+          <div>Sales motion<span>Self-serve</span></div>
+          <div>CAC<span>~₹500</span></div>
+        </div>
+        <div class="why">
+          <strong>Why blue:</strong> They produce 2–5 explainer reels/day. They don't have an editor. They don't have voice variety. They want avatar-led shorts in their language, fast. Currently bridged with InVideo + ChatGPT — clunky.
+        </div>
+      </div>
+
+      <!-- Niche 3 -->
+      <div class="niche-card">
+        <div class="rank">Niche 03 · Future</div>
+        <h3>Tier-2 City <em>Real Estate</em> &amp; Auto Dealers</h3>
+        <div class="one-liner">Hyderabad / Pune / Indore property &amp; vehicle dealers running WhatsApp + Reels-led inside sales</div>
+        <div class="meta-grid">
+          <div>ICP size<span>~10k dealerships</span></div>
+          <div>Avg ticket<span>₹8k–₹25k/mo</span></div>
+          <div>Sales motion<span>Channel partner</span></div>
+          <div>CAC<span>~₹2k</span></div>
+        </div>
+        <div class="why">
+          <strong>Why blue:</strong> They want walkthrough videos, listing reels, regional-language voice-over. Currently done by random freelancers. No incumbent. <em>But:</em> sales cycle is slow, project-based, hard to retain. Park for Year 2.
+        </div>
+      </div>
+
+    </div>
+
+    <h4>Why these three, in this order</h4>
+    <ul>
+      <li><strong>Niche 1 is highest leverage now.</strong> Each ad-shop customer brings 5–20 of their D2C clients into our orbit. It's a B2B2B motion that compounds.</li>
+      <li><strong>Niche 2 is the biggest by count</strong> but lowest ticket. Self-serve only works after the product is rock-solid (M6+). Dragged forward, it would burn support hours.</li>
+      <li><strong>Niche 3 is real money but slow.</strong> Channel-partner sales (working through real-estate marketing consultancies) is a separate sales motion entirely. Year 2.</li>
+    </ul>
+  </section>
+
+  <!-- §5 -->
+  <section id="s5">
+    <span class="section-num">§ 05 · Wedge</span>
+    <h2>Pick one. <em>Niche 1.</em></h2>
+    <p>For the first 12 months, the only customer is: <strong>creative shops and digital ad agencies of 5–25 people, in Hyderabad and Bengaluru, who serve at least three D2C brands needing regional-language ad creative.</strong></p>
+    <p>That sentence is the company's spine for one year. Anyone who doesn't fit it gets a polite "we're not the right fit yet." This is not arrogance — it's discipline. Every "yes" outside this ICP eats founder time that the ICP needs.</p>
+
+    <div class="callout">
+      <span class="callout-label">What this means in practice</span>
+      <strong>If a wedding videographer emails asking to use the platform — say no.</strong> If a SaaS founder wants product demo videos — no. If a school wants e-learning content — no. Every "no" outside Niche 1 is a "yes" to Niche 1. Founder focus is the scarcest resource. Spend it on one room.
+    </div>
+  </section>
+
+  <!-- §6 -->
+  <section id="s6">
+    <span class="section-num">§ 06 · Roadmap</span>
+    <h2>The four <em>arcs</em>.</h2>
+    <p>Twelve months in four quarters. Each quarter has a single theme. The theme is the answer to "what is the only thing we will be measured on this quarter?"</p>
+
+    <div class="roadmap">
+
+      <div class="roadmap-row">
+        <div class="quarter">Q1 · Build</div>
+        <div class="theme">
+          <em>Make</em> the thing work for one customer.
+          <p>4-week ruthless cut from the architecture doc. Manual critique. Email-based delivery. Founder approves every asset. Three free design partners onboarded by week 12. Goal: prove the Identity Lock + Critique combination produces output one human will actually ship.</p>
+        </div>
+        <div class="targets">
+          <strong>3</strong>design partners signed<br/>
+          <strong>20</strong>assets delivered<br/>
+          <strong>0</strong>paid customers (deliberate)
+        </div>
+      </div>
+
+      <div class="roadmap-row">
+        <div class="quarter">Q2 · Convert</div>
+        <div class="theme">
+          <em>Turn</em> design partners into paid contracts.
+          <p>Critique gate goes live. Razorpay billing. Tier 1 (Studio, ₹14,999/mo) opens. Each design partner converts or doesn't — and a converted partner brings one referral. First Slack feedback channel.</p>
+        </div>
+        <div class="targets">
+          <strong>5</strong>paid customers<br/>
+          <strong>₹50k–₹1L</strong>MRR<br/>
+          <strong>4.0</strong>AAPCW avg
+        </div>
+      </div>
+
+      <div class="roadmap-row">
+        <div class="quarter">Q3 · Compound</div>
+        <div class="theme">
+          <em>Make</em> the customer's customer ask for us.
+          <p>Co-branded case studies with first 3 paying customers. Their D2C clients see "powered by Studio Tantra" on assets. We ship Agency tier. We hire one part-time engineer. We start a private Telegram for ad-shop founders in Hyderabad — 30 members minimum by quarter end.</p>
+        </div>
+        <div class="targets">
+          <strong>15</strong>paid customers<br/>
+          <strong>₹3–5L</strong>MRR<br/>
+          <strong>6.5</strong>AAPCW avg
+        </div>
+      </div>
+
+      <div class="roadmap-row">
+        <div class="quarter">Q4 · Defend</div>
+        <div class="theme">
+          <em>Lock</em> the wedge before someone copies it.
+          <p>2 more language pairs (Marathi, Bangla). Templated workflow library. Customer-side reusable brand kits. First case study published publicly. Decision point: raise ₹2–4 cr angel round, or grow on revenue alone? Decided on Q4 data.</p>
+        </div>
+        <div class="targets">
+          <strong>30</strong>paid customers<br/>
+          <strong>₹6–10L</strong>MRR<br/>
+          <strong>8.0</strong>AAPCW avg
+        </div>
+      </div>
+
+    </div>
+
+    <h4>The arc, in one sentence each</h4>
+    <ol>
+      <li><strong>Q1 — Build:</strong> can the system make one good asset?</li>
+      <li><strong>Q2 — Convert:</strong> will customers pay for it?</li>
+      <li><strong>Q3 — Compound:</strong> can each customer create the next?</li>
+      <li><strong>Q4 — Defend:</strong> can we hold the wedge against bigger players?</li>
+    </ol>
+  </section>
+
+  <!-- §7 -->
+  <section id="s7">
+    <span class="section-num">§ 07 · KPIs</span>
+    <h2>The <em>contract</em> with myself.</h2>
+    <p>One leading metric per area, per quarter. If a metric isn't here, it's not measured. Avoiding metric sprawl is itself a metric.</p>
+
+    <table class="tbl">
+      <thead><tr><th>Area</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>North Star (AAPCW)</strong></td>
+          <td>2.0</td>
+          <td>4.0</td>
+          <td>6.5</td>
+          <td>8.0</td>
+        </tr>
+        <tr>
+          <td>Paid customers</td>
+          <td>0</td>
+          <td>5</td>
+          <td>15</td>
+          <td>30</td>
+        </tr>
+        <tr>
+          <td>MRR</td>
+          <td>₹0</td>
+          <td>₹50k–₹1L</td>
+          <td>₹3–5L</td>
+          <td>₹6–10L</td>
+        </tr>
+        <tr>
+          <td>Gross margin</td>
+          <td>n/a</td>
+          <td>≥25%</td>
+          <td>≥35%</td>
+          <td>≥45%</td>
+        </tr>
+        <tr>
+          <td>Critique pass rate (1st try)</td>
+          <td>≥50%</td>
+          <td>≥60%</td>
+          <td>≥70%</td>
+          <td>≥75%</td>
+        </tr>
+        <tr>
+          <td>Customer rejection rate</td>
+          <td>n/a</td>
+          <td>≤25%</td>
+          <td>≤15%</td>
+          <td>≤10%</td>
+        </tr>
+        <tr>
+          <td>Net retention (M3 cohort)</td>
+          <td>n/a</td>
+          <td>n/a</td>
+          <td>≥90%</td>
+          <td>≥110%</td>
+        </tr>
+        <tr>
+          <td>Founder hrs/week on ops vs build</td>
+          <td>20% / 80%</td>
+          <td>40% / 60%</td>
+          <td>60% / 40%</td>
+          <td>70% / 30%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      <span class="callout-label">The KPI I'm watching most</span>
+      Critique pass rate vs Customer rejection rate. The gap between "we said it's good" and "they shipped it" is where the product fails most quietly. If by Q3 the gap is &gt;15 percentage points, that's a deeper signal than any revenue number.
+    </div>
+  </section>
+
+  <!-- §8 -->
+  <section id="s8">
+    <span class="section-num">§ 08 · Funnel</span>
+    <h2>Where revenue <em>actually</em> comes from.</h2>
+    <p>Honest M9 funnel. Reverse-engineered from the 15-customer target. If any conversion stage falls out of band, that's where to debug.</p>
+
+    <div class="funnel">
+      <div class="funnel-row">
+        <div class="stage">LinkedIn DMs / intros</div>
+        <div class="bar" style="width: 100%;">300</div>
+        <div class="num">300</div>
+      </div>
+      <div class="funnel-row">
+        <div class="stage">Discovery call</div>
+        <div class="bar" style="width: 50%;">150 (50%)</div>
+        <div class="num">150</div>
+      </div>
+      <div class="funnel-row">
+        <div class="stage">Live demo</div>
+        <div class="bar" style="width: 30%;">90 (60% of calls)</div>
+        <div class="num">90</div>
+      </div>
+      <div class="funnel-row">
+        <div class="stage">Free pilot (1 campaign)</div>
+        <div class="bar" style="width: 17%;">50 (55% of demos)</div>
+        <div class="num">50</div>
+      </div>
+      <div class="funnel-row outcome">
+        <div class="stage">Paid customer</div>
+        <div class="bar" style="width: 5%;">15 (30% of pilots)</div>
+        <div class="num">15</div>
+      </div>
+    </div>
+
+    <p>The brutal numbers: <strong>20:1 top-of-funnel-to-paid ratio</strong>. To hit 30 customers by M12 I need 600 quality intros over 9 months — call it 70 a month. That is 16 a week. That is the founder's actual job for the year, not "build the AI."</p>
+  </section>
+
+  <!-- §9 -->
+  <section id="s9">
+    <span class="section-num">§ 09 · Motion</span>
+    <h2>How we <em>sell</em>, week by week.</h2>
+    <p>Ten hours a week of side-venture time, distributed honestly:</p>
+    <table class="tbl">
+      <thead><tr><th>Activity</th><th>Hrs / wk · Q1</th><th>Hrs / wk · Q2</th><th>Hrs / wk · Q4</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Build / engineering</td><td>8</td><td>5</td><td>3</td><td>Drops as engineer onboards in Q3</td></tr>
+        <tr><td>Customer calls (intros + discovery + demos)</td><td>1</td><td>3</td><td>4</td><td>The most valuable hour, always</td></tr>
+        <tr><td>LinkedIn outbound + content</td><td>0.5</td><td>1</td><td>1.5</td><td>20 DMs/wk · 1 post/wk</td></tr>
+        <tr><td>Existing-customer success</td><td>0</td><td>1</td><td>2</td><td>Retention &gt; acquisition by Q4</td></tr>
+        <tr><td>Ops, billing, admin</td><td>0.5</td><td>1</td><td>1.5</td><td>Compounds with customers</td></tr>
+        <tr><td><strong>Total</strong></td><td><strong>10</strong></td><td><strong>11</strong></td><td><strong>12</strong></td><td>Q4 is the ceiling. Beyond → kill criterion #4</td></tr>
+      </tbody>
+    </table>
+
+    <h3>The weekly sales cadence (Q2 onwards)</h3>
+    <ol>
+      <li><strong>Mon morning (commute):</strong> Review last week's funnel. 3 questions: who didn't reply, who needs follow-up, who closed.</li>
+      <li><strong>Tue/Thu lunch (45 min each):</strong> 5 LinkedIn DMs each. Specific. Personalized to one D2C client they recently posted about.</li>
+      <li><strong>Wed evening (1 hr):</strong> One discovery call. Default 6 PM IST.</li>
+      <li><strong>Fri evening (1 hr):</strong> One demo OR one customer success call (alternating).</li>
+      <li><strong>Sat morning (90 min):</strong> Pipeline review + Loom case-study video update for existing customers.</li>
+      <li><strong>Sun:</strong> Off. Non-negotiable. Daughter, wife, F&amp;O book.</li>
+    </ol>
+
+    <div class="callout">
+      <span class="callout-label">Why this cadence works at 10 hrs/week</span>
+      Sales is rhythm, not blocks. 30 minutes daily beats 4 hours on Sunday. The cadence above produces <strong>~16 conversations/week</strong> at peak, which is the funnel-throughput math required to hit 30 customers by M12.
+    </div>
+  </section>
+
+  <!-- §10 -->
+  <section id="s10">
+    <span class="section-num">§ 10 · The not-list</span>
+    <h2>What I <em>will not do</em> this year.</h2>
+    <p>Equally important to the to-do list. Each item below is a genuine temptation that would kill the plan.</p>
+    <table class="tbl">
+      <thead><tr><th>Temptation</th><th>Why I'm saying no</th></tr></thead>
+      <tbody>
+        <tr><td>Build a YouTube channel for "thought leadership"</td><td>Year 2 at earliest. Channel = full-time job. I have 12 hrs/week and they belong to customers.</td></tr>
+        <tr><td>Hire a CXO-level co-founder</td><td>I don't need a co-CEO. I need a part-time engineer in Q3. Different role.</td></tr>
+        <tr><td>Raise a pre-seed round before traction</td><td>Money before product–market fit becomes a deadline pretending to be capital. Bootstrap to ₹6L MRR first.</td></tr>
+        <tr><td>Expand to Mumbai / Delhi customers</td><td>Hyderabad + Bengaluru is enough TAM for Year 1. Geographic focus = sales focus.</td></tr>
+        <tr><td>Build a mobile app</td><td>Customers do this from a desk. Web is fine. App is Year 2 if data demands it.</td></tr>
+        <tr><td>Add chatbot / customer support automation</td><td>Founder support is a feature, not a bug, until ~50 customers. Customers tell me what's broken faster than tickets do.</td></tr>
+        <tr><td>Pitch competitions / accelerators</td><td>2 days for a 5-min pitch. Same time = 8 customer calls. Math doesn't favor pitching.</td></tr>
+        <tr><td>Generative video for studios / film</td><td>Different ICP, different sales cycle, different quality bar. Stay in the wedge.</td></tr>
+        <tr><td>Self-host foundation models</td><td>API costs are predictable. GPU costs are not. Don't build infra you won't need until Series A.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- §11 -->
+  <section id="s11">
+    <span class="section-num">§ 11 · Kill criteria</span>
+    <h2>When I <em>walk away</em>.</h2>
+    <p>Pre-committed because future-me will be motivated to ignore the data.</p>
+    <ol>
+      <li><strong>End of Q1 (M3):</strong> If &lt;3 active design partners using the system weekly — kill.</li>
+      <li><strong>End of Q2 (M6):</strong> If &lt;5 paying customers AND AAPCW &lt;3 — kill.</li>
+      <li><strong>End of Q3 (M9):</strong> If MRR &lt;₹2L OR gross margin &lt;25% — pause &amp; re-architect; both fail → kill.</li>
+      <li><strong>End of Q4 (M12):</strong> If MRR &lt;₹6L OR I'm working &gt;15 hrs/week — kill or sell.</li>
+      <li><strong>Anytime:</strong> A foundation-model vendor ships an India-localised creative agent at &lt;₹0.5/asset → exit gracefully, sell what's left, move on.</li>
+      <li><strong>Anytime:</strong> Day-job performance review drops a tier — kill. The salary is the foundation.</li>
+      <li><strong>Anytime:</strong> Family signals real strain (wife flags, daughter notices) — kill. Non-negotiable.</li>
+    </ol>
+    <div class="callout kill">
+      <span class="callout-label">Promise</span>
+      I will treat these as data, not failure. The point of this venture is optionality, not validation of my ego. If I read this in 11 months and my instinct is to argue with one of these criteria, that's the moment I most need to honor it.
+    </div>
+  </section>
+
+  <!-- §12 -->
+  <section id="s12">
+    <span class="section-num">§ 12 · The look-back</span>
+    <h2>Twelve months from now.</h2>
+    <p>If this plan worked, on 26 April 2027 I will be able to say:</p>
+    <ul>
+      <li>30 paying customers, mostly in Hyderabad/Bengaluru ad-agency segment.</li>
+      <li>₹6–10L MRR, gross margin ≥45%, healthy customer retention.</li>
+      <li>One part-time engineer hired in Q3, productive by Q4.</li>
+      <li>3 case studies published, with named D2C client logos.</li>
+      <li>The product makes 8+ approved assets per customer per week — embedded in workflow.</li>
+      <li>I'm working 12 hrs/week, not 30. The vidaXL job is unaffected.</li>
+      <li>The decision in front of me is "raise ₹2–4 cr to expand languages and ICPs, or grow on revenue alone." Either is fine.</li>
+    </ul>
+
+    <p>If those are true, the Year 2 plan writes itself: more languages, more ICPs (Niche 2, then Niche 3), and the option to start the creator channel as marketing flywheel. The vision in the triptych at the top of this document — Indian regional creators outshipping US studios — becomes a 4-year claim, not a 5-year one.</p>
+
+    <p>If those are not true, the kill criteria above tell me what to do instead. Either way, this document was useful — it forced specificity in April 2026 that future-me cannot pretend wasn't there.</p>
+
+    <div class="pull-quote">
+      The vision is large. The first 365 days are not. <em>Both are true at the same time</em>, and the second one is the only one I control.
+    </div>
+  </section>
+
+  <footer>
+    <span>Studio Tantra · Founder Operating Plan v0.1 · Internal</span>
+    <span>Review: end of each quarter · Decide: M12 · Kill: per §11</span>
+  </footer>
+
+</div>
+</body>
+</html>
