@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Agent Studio — Internal Strategy Memo v0.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f5f1e8;
+    --paper-deep: #ebe5d4;
+    --ink: #1a1612;
+    --ink-soft: #44382a;
+    --rule: #2a221a;
+    --accent: #c2410c;
+    --accent-deep: #7c2d12;
+    --warn: #92400e;
+    --good: #14532d;
+    --kill: #7f1d1d;
+    --shadow: 0 1px 0 rgba(26, 22, 18, 0.06), 0 4px 14px rgba(26, 22, 18, 0.04);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(194, 65, 12, 0.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(20, 83, 45, 0.03) 0%, transparent 50%);
+  }
+  .grain::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 60px 28px 120px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Masthead */
+  .masthead {
+    border-top: 4px double var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 28px 0 22px;
+    margin-bottom: 48px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 24px;
+    align-items: end;
+  }
+  .masthead .pub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+  }
+  .masthead h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 800;
+    font-size: clamp(38px, 5.5vw, 64px);
+    line-height: 0.95;
+    margin: 0;
+    letter-spacing: -0.02em;
+    grid-column: 1 / -1;
+    margin-top: 8px;
+  }
+  .masthead h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent-deep);
+  }
+  .meta-line {
+    grid-column: 1 / -1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--ink-soft);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 14px;
+  }
+  .meta-line span strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* Standfirst */
+  .standfirst {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    line-height: 1.45;
+    font-weight: 300;
+    color: var(--ink-soft);
+    border-left: 3px solid var(--accent);
+    padding: 4px 0 4px 24px;
+    margin: 0 0 56px;
+    max-width: 720px;
+  }
+  .standfirst em { font-style: italic; color: var(--ink); }
+
+  /* TOC */
+  .toc {
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    padding: 24px 28px;
+    margin-bottom: 64px;
+    position: relative;
+  }
+  .toc::before {
+    content: 'CONTENTS';
+    position: absolute;
+    top: -10px;
+    left: 18px;
+    background: var(--paper);
+    padding: 0 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--ink-soft);
+  }
+  .toc ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: toc;
+    columns: 2;
+    column-gap: 36px;
+  }
+  .toc li {
+    counter-increment: toc;
+    padding: 6px 0;
+    font-size: 14px;
+    break-inside: avoid;
+  }
+  .toc li::before {
+    content: counter(toc, decimal-leading-zero) " — ";
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    margin-right: 4px;
+  }
+  .toc a { color: var(--ink); text-decoration: none; border-bottom: 1px dotted transparent; }
+  .toc a:hover { border-bottom-color: var(--accent); color: var(--accent-deep); }
+
+  /* Sections */
+  section {
+    margin-bottom: 72px;
+    scroll-margin-top: 24px;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: block;
+  }
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(28px, 3.5vw, 38px);
+    line-height: 1.1;
+    margin: 0 0 28px;
+    letter-spacing: -0.015em;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 16px;
+  }
+  h2 em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent-deep);
+  }
+  h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: 22px;
+    margin: 36px 0 14px;
+    color: var(--ink);
+  }
+  h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 28px 0 12px;
+  }
+  p { margin: 0 0 18px; max-width: 720px; }
+  p strong { color: var(--ink); font-weight: 600; }
+  p em { color: var(--accent-deep); }
+
+  ul, ol { padding-left: 22px; margin: 0 0 22px; max-width: 720px; }
+  li { margin-bottom: 8px; }
+
+  /* Pull quotes / callouts */
+  .callout {
+    margin: 28px 0;
+    padding: 20px 24px;
+    border-left: 4px solid var(--accent);
+    background: rgba(194, 65, 12, 0.06);
+    font-family: 'Fraunces', serif;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+  .callout.kill { border-left-color: var(--kill); background: rgba(127, 29, 29, 0.06); }
+  .callout.good { border-left-color: var(--good); background: rgba(20, 83, 45, 0.05); }
+  .callout.warn { border-left-color: var(--warn); background: rgba(146, 64, 14, 0.06); }
+  .callout-label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-deep);
+    margin-bottom: 8px;
+  }
+  .callout.kill .callout-label { color: var(--kill); }
+  .callout.good .callout-label { color: var(--good); }
+  .callout.warn .callout-label { color: var(--warn); }
+
+  /* Tables */
+  .tbl {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 14px;
+  }
+  .tbl th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    border-bottom: 2px solid var(--rule);
+    padding: 10px 12px 10px 0;
+    vertical-align: bottom;
+  }
+  .tbl td {
+    border-bottom: 1px solid rgba(42, 34, 26, 0.18);
+    padding: 12px 12px 12px 0;
+    vertical-align: top;
+  }
+  .tbl tr:hover td { background: rgba(194, 65, 12, 0.03); }
+  .tbl .pill {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.05em;
+  }
+  .pill-good { background: rgba(20, 83, 45, 0.12); color: var(--good); }
+  .pill-warn { background: rgba(146, 64, 14, 0.15); color: var(--warn); }
+  .pill-kill { background: rgba(127, 29, 29, 0.12); color: var(--kill); }
+  .pill-neutral { background: rgba(42, 34, 26, 0.08); color: var(--ink-soft); }
+
+  /* Architecture diagram */
+  .arch {
+    background: var(--paper-deep);
+    border: 1px solid var(--rule);
+    padding: 28px;
+    margin: 28px 0;
+    overflow-x: auto;
+  }
+  .arch svg { display: block; max-width: 100%; height: auto; }
+
+  /* Cost grid */
+  .cost-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+  }
+  .cost-card {
+    border: 1px solid var(--rule);
+    padding: 18px 20px;
+    background: var(--paper);
+  }
+  .cost-card h5 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin: 0 0 6px;
+  }
+  .cost-card .num {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--ink);
+    display: block;
+  }
+  .cost-card .sub {
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* Verdict */
+  .verdict {
+    border: 2px solid var(--rule);
+    padding: 32px 36px;
+    margin: 32px 0;
+    background: var(--paper-deep);
+    position: relative;
+  }
+  .verdict::before {
+    content: 'VERDICT';
+    position: absolute;
+    top: -12px;
+    left: 24px;
+    background: var(--paper);
+    padding: 0 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent-deep);
+  }
+  .verdict h3 {
+    margin-top: 0;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  /* Decision matrix dots */
+  .dot {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .dot-y { background: var(--good); }
+  .dot-m { background: var(--warn); }
+  .dot-n { background: var(--kill); }
+
+  /* Footer */
+  footer {
+    border-top: 4px double var(--rule);
+    margin-top: 80px;
+    padding-top: 24px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; }
+    .grain::before { display: none; }
+    section { page-break-inside: avoid; }
+  }
+
+  /* Responsive */
+  @media (max-width: 640px) {
+    .toc ol { columns: 1; }
+    .standfirst { font-size: 18px; padding-left: 16px; }
+    .verdict { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body class="grain">
+<div class="wrap">
+
+  <!-- Masthead -->
+  <header class="masthead">
+    <div class="pub">Side Ventures · Internal · v0.1</div>
+    <div></div>
+    <div class="pub">Hyderabad · 26 Apr 2026</div>
+    <h1>Agent <em>Studio</em> — A Strategy Memo I'm Writing To Myself</h1>
+    <div class="meta-line">
+      <span><strong>Author:</strong> Me</span>
+      <span><strong>Audience:</strong> Me</span>
+      <span><strong>Status:</strong> Pre-decision</span>
+      <span><strong>Decide by:</strong> 90 days from today</span>
+    </div>
+  </header>
+
+  <!-- Standfirst -->
+  <p class="standfirst">
+    A B2B per-use AI media production platform for Indian SMBs and ad shops.
+    The idea has merit. The version I first described would bankrupt me.
+    The version I should actually build is <em>10× narrower, 100× cheaper to test,
+    and starts paying within four months — or it dies.</em>
+  </p>
+
+  <!-- TOC -->
+  <nav class="toc">
+    <ol>
+      <li><a href="#s1">Why I'm writing this to myself</a></li>
+      <li><a href="#s2">What I got wrong on the first pass</a></li>
+      <li><a href="#s3">Pick exactly one customer</a></li>
+      <li><a href="#s4">The pain stack, ranked by ₹</a></li>
+      <li><a href="#s5">The wedge product (90-day MVP)</a></li>
+      <li><a href="#s6">Architecture and tooling</a></li>
+      <li><a href="#s7">The 18 agents — what's real, what's marketing</a></li>
+      <li><a href="#s8">Pricing and unit economics</a></li>
+      <li><a href="#s9">Bootstrap cost — line by line</a></li>
+      <li><a href="#s10">Commercial &amp; operational challenges</a></li>
+      <li><a href="#s11">Competition I have to beat or sidestep</a></li>
+      <li><a href="#s12">Risks and how each one kills me</a></li>
+      <li><a href="#s13">Roadmap — Year 1, Year 2, Year 3</a></li>
+      <li><a href="#s14">Kill criteria — when I walk away</a></li>
+      <li><a href="#s15">Decision against my own filters</a></li>
+      <li><a href="#s16">Open questions I haven't answered</a></li>
+    </ol>
+  </nav>
+
+  <!-- Section 1 -->
+  <section id="s1">
+    <span class="section-num">§ 01</span>
+    <h2>Why I'm writing this to <em>myself</em></h2>
+    <p>I have a strong PM income, two existing capital plays (Bengaluru land, rental setup), an active F&amp;O book, a wife and a daughter in Class 3. I do not need this venture to work in order to eat. That's a feature, not a bug — it lets me be ruthless about kill criteria.</p>
+    <p>This memo exists so that 90 days from now, when I am either excited about a working prototype or frustrated by API bills, I can come back and check what I actually believed at the start. <strong>Future me is not allowed to rewrite past me's assumptions silently.</strong></p>
+  </section>
+
+  <!-- Section 2 -->
+  <section id="s2">
+    <span class="section-num">§ 02</span>
+    <h2>What I got wrong on the first pass</h2>
+    <p>I framed this as: <em>"AI agent orchestration that automates the entire media production workflow — story writers, character artists, scene builders, screenplay, editors, directors, critiques."</em> Six things wrong with that:</p>
+    <ol>
+      <li><strong>That's a Bollywood-studio problem, not a creator problem.</strong> Solo creators don't think in screenplays. Studios do — and they have ~10 vendors already.</li>
+      <li><strong>The "specialist agents in every function" architecture is already shipping.</strong> DeeVid, Invideo Agent, RoboNeo, HeyGen Video Agent, LTX Studio, Showrunner. I would be late to a category, not early.</li>
+      <li><strong>Foundation video models (Sora, Veo 4, Runway Gen-4, Kling) are commoditising the hardest part of the stack.</strong> If my product depends on being the model, I lose. If it depends on the workflow around the model, I have a chance.</li>
+      <li><strong>"End-to-end automated movie" is a $5–20M Series A play.</strong> I would burn ₹2–4 crore before a single paying customer. Not bootstrappable.</li>
+      <li><strong>None of my actual strengths apply.</strong> I'm a Senior PM in e-commerce/SFCC with program management and content/playbook chops. I am not an ML researcher. The version of this idea I first described requires someone I am not.</li>
+      <li><strong>My time budget is 10–15 hrs/week.</strong> I cannot out-build a funded 8-person team. I have to out-niche them.</li>
+    </ol>
+    <div class="callout kill">
+      <span class="callout-label">Kill the broad version</span>
+      "End-to-end AI movie studio" is the wrong shape for me. It's the right shape for someone with $5M and an ML team in Bangalore. That's not me. Stop pretending it is.
+    </div>
+  </section>
+
+  <!-- Section 3 -->
+  <section id="s3">
+    <span class="section-num">§ 03</span>
+    <h2>Pick <em>exactly one</em> customer</h2>
+    <p>"Small/localized businesses" is still too broad. Six candidates, scored honestly:</p>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Candidate ICP</th>
+          <th>Volume</th>
+          <th>Ticket</th>
+          <th>Repeat?</th>
+          <th>Sales motion</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Local ad agencies / creative shops</strong> (Hyd ~300, Bengaluru ~600)</td>
+          <td>High</td>
+          <td>₹15k–₹80k/mo</td>
+          <td>Yes</td>
+          <td>Founder-led, network-based</td>
+          <td><span class="pill pill-good">Lead ICP</span></td>
+        </tr>
+        <tr>
+          <td><strong>D2C performance brands</strong></td>
+          <td>Very high</td>
+          <td>₹50k–₹3L/mo</td>
+          <td>Yes</td>
+          <td>Long, ROAS-tied</td>
+          <td><span class="pill pill-warn">Year 2</span></td>
+        </tr>
+        <tr>
+          <td><strong>Real estate / hospitals / schools</strong></td>
+          <td>Low</td>
+          <td>₹50k–₹2L one-shot</td>
+          <td>No</td>
+          <td>Project sales</td>
+          <td><span class="pill pill-kill">Skip</span></td>
+        </tr>
+        <tr>
+          <td><strong>Wedding / event creators</strong></td>
+          <td>Seasonal</td>
+          <td>Tiny</td>
+          <td>No</td>
+          <td>Hyperlocal, price-sensitive</td>
+          <td><span class="pill pill-kill">Skip</span></td>
+        </tr>
+        <tr>
+          <td><strong>Educator-creators / coaching businesses</strong></td>
+          <td>High</td>
+          <td>₹3k–₹15k/mo</td>
+          <td>Yes</td>
+          <td>Self-serve possible</td>
+          <td><span class="pill pill-warn">Adjacent ICP</span></td>
+        </tr>
+        <tr>
+          <td><strong>Regional OTT / Telugu YouTube channels</strong></td>
+          <td>Medium</td>
+          <td>Variable</td>
+          <td>Maybe</td>
+          <td>Already have in-house</td>
+          <td><span class="pill pill-kill">Skip Year 1</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>Lead ICP, fully specified</h4>
+    <p><strong>Hyderabad/Bengaluru small-and-mid creative shops and digital ad agencies (5–25 people)</strong> who churn out 30–200 short ad creatives per month for D2C brands and local advertisers. They feel margin pressure from in-house brand teams and from Meta's automated creative tools. They will pay for a tool that lets them produce more variants in fewer hours, especially in regional languages, with a consistent character or brand mascot across the set.</p>
+    <p>I can find ~50 of these inside my own LinkedIn second-degree network in Hyderabad alone. <strong>Sales motion: founder-led, by introduction, lunch meetings on weekends.</strong> Not Google Ads.</p>
+  </section>
+
+  <!-- Section 4 -->
+  <section id="s4">
+    <span class="section-num">§ 04</span>
+    <h2>The pain stack, ranked by <em>willingness to pay</em></h2>
+    <p>Severity × frequency × ₹ extractable. Not by what's interesting.</p>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th style="width: 28px;">#</th>
+          <th>Pain</th>
+          <th>Frequency</th>
+          <th>₹ extractable</th>
+          <th>Already solved?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>01</td>
+          <td><strong>Character / brand-mascot consistency across an ad campaign</strong></td>
+          <td>Per campaign (weekly)</td>
+          <td>High</td>
+          <td><span class="pill pill-warn">Partially</span></td>
+        </tr>
+        <tr>
+          <td>02</td>
+          <td><strong>Multilingual dub + lip-sync for Indian regional markets</strong> (Telugu, Tamil, Kannada, Hindi, Marathi, Bangla)</td>
+          <td>Per asset</td>
+          <td>Very high</td>
+          <td><span class="pill pill-warn">US tools weak</span></td>
+        </tr>
+        <tr>
+          <td>03</td>
+          <td><strong>Auto-cut / variant generation</strong> from one master ad to 6 platforms × 3 lengths</td>
+          <td>Per campaign</td>
+          <td>High</td>
+          <td><span class="pill pill-kill">Crowded</span></td>
+        </tr>
+        <tr>
+          <td>04</td>
+          <td><strong>Hook / opening 3-second variant generation</strong></td>
+          <td>Per campaign</td>
+          <td>Medium</td>
+          <td><span class="pill pill-kill">Crowded</span></td>
+        </tr>
+        <tr>
+          <td>05</td>
+          <td><strong>Storyboard / animatic for client pitches</strong></td>
+          <td>Pre-sale</td>
+          <td>Medium</td>
+          <td><span class="pill pill-warn">Partial</span></td>
+        </tr>
+        <tr>
+          <td>06</td>
+          <td><strong>Quality-gate review</strong> (LLM-as-critique against brand rules and platform specs)</td>
+          <td>Per asset</td>
+          <td>Low (but sticky)</td>
+          <td><span class="pill pill-good">Underserved</span></td>
+        </tr>
+        <tr>
+          <td>07</td>
+          <td><strong>End-to-end "movie from prompt"</strong></td>
+          <td>Rare</td>
+          <td>Low for SMB</td>
+          <td><span class="pill pill-kill">Skip — Sora/LTX</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>The two pains I will price against</h4>
+    <p>Pain #1 (character/brand consistency) and Pain #2 (regional-language dub) are where US-built tools are visibly weakest and where my customer is visibly bleeding. <strong>Everything else in v1 is a free side-feature that supports those two.</strong></p>
+  </section>
+
+  <!-- Section 5 -->
+  <section id="s5">
+    <span class="section-num">§ 05</span>
+    <h2>The wedge product — <em>90-day MVP</em></h2>
+    <p>Working name: <strong>Studio Tantra</strong> (placeholder; bikeshed later).</p>
+    <p><strong>One-line pitch:</strong> "Upload your brand mascot or hero shot. We generate consistent ad variants across 6 Indian languages, 3 aspect ratios, and 4 hooks — billed per finished asset."</p>
+    <h4>Inputs the customer provides</h4>
+    <ul>
+      <li>Reference image of mascot/hero/product</li>
+      <li>Brand voice doc or 5 prior ads</li>
+      <li>Campaign brief (1 paragraph)</li>
+      <li>Target language list</li>
+    </ul>
+    <h4>Outputs the platform delivers</h4>
+    <ul>
+      <li>6–18 ad variants (language × aspect × hook permutations)</li>
+      <li>Each one character-consistent with the reference</li>
+      <li>Lip-synced regional dub where there's a presenter</li>
+      <li>QA-graded against brand rules + Meta/YouTube spec</li>
+      <li>Deliverable in 4–24 hours, not 2 weeks</li>
+    </ul>
+    <h4>What I deliberately exclude in v1</h4>
+    <ul>
+      <li>Long-form video (&gt;90 seconds)</li>
+      <li>Live-action film / drama / narrative storytelling</li>
+      <li>Original music composition (use ElevenLabs / Suno API only)</li>
+      <li>Custom model training (use APIs end-to-end)</li>
+      <li>The "build my own creator channel" idea — that's Year 2, not now</li>
+    </ul>
+  </section>
+
+  <!-- Section 6 -->
+  <section id="s6">
+    <span class="section-num">§ 06</span>
+    <h2>Architecture &amp; tooling</h2>
+    <p>Two things to be honest about: <em>(a) I am not building foundation models</em>, and <em>(b) my architecture is a workflow on top of other people's APIs.</em> That's fine — it's the only sane bootstrap path. The defensibility comes from the workflow, the QA layer, the regional-language tuning, and the SOPs around delivery. Not from the models.</p>
+
+    <div class="arch">
+      <svg viewBox="0 0 880 540" xmlns="http://www.w3.org/2000/svg" font-family="Inter Tight, sans-serif">
+        <defs>
+          <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#44382a"/>
+          </marker>
+          <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <line x1="0" y1="0" x2="0" y2="6" stroke="#c2410c" stroke-width="1" opacity="0.25"/>
+          </pattern>
+        </defs>
+
+        <!-- Title -->
+        <text x="440" y="24" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="2" fill="#44382a">STUDIO TANTRA — V1 ARCHITECTURE</text>
+        <line x1="40" y1="34" x2="840" y2="34" stroke="#2a221a" stroke-width="1"/>
+
+        <!-- Layer 1: Customer surface -->
+        <text x="40" y="62" font-size="10" font-weight="700" letter-spacing="2" fill="#c2410c">01 · CUSTOMER SURFACE</text>
+        <rect x="40" y="72" width="240" height="56" fill="#ebe5d4" stroke="#2a221a"/>
+        <text x="160" y="94" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1612">Web app (Next.js)</text>
+        <text x="160" y="112" text-anchor="middle" font-size="10" fill="#44382a">Brief upload · review · approve</text>
+
+        <rect x="300" y="72" width="240" height="56" fill="#ebe5d4" stroke="#2a221a"/>
+        <text x="420" y="94" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1612">Razorpay billing</text>
+        <text x="420" y="112" text-anchor="middle" font-size="10" fill="#44382a">Per-asset credits · GST invoicing</text>
+
+        <rect x="560" y="72" width="240" height="56" fill="#ebe5d4" stroke="#2a221a"/>
+        <text x="680" y="94" text-anchor="middle" font-size="13" font-weight="600" fill="#1a1612">Slack / WhatsApp delivery</text>
+        <text x="680" y="112" text-anchor="middle" font-size="10" fill="#44382a">Drop links to finished assets</text>
+
+        <!-- Arrow down -->
+        <line x1="440" y1="128" x2="440" y2="158" stroke="#44382a" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Layer 2: Orchestration -->
+        <text x="40" y="178" font-size="10" font-weight="700" letter-spacing="2" fill="#c2410c">02 · ORCHESTRATION</text>
+        <rect x="40" y="188" width="800" height="68" fill="url(#hatch)" stroke="#2a221a"/>
+        <text x="440" y="214" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1612">CrewAI / LangGraph orchestrator</text>
+        <text x="440" y="232" text-anchor="middle" font-size="11" fill="#44382a">Plans the job · routes to agents · enforces budgets · retries on failure · logs everything for QA replay</text>
+        <text x="440" y="248" text-anchor="middle" font-size="10" fill="#7c2d12">Open-source. Free. Runs on a single node.</text>
+
+        <line x1="440" y1="256" x2="440" y2="286" stroke="#44382a" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Layer 3: Specialist agents -->
+        <text x="40" y="306" font-size="10" font-weight="700" letter-spacing="2" fill="#c2410c">03 · SPECIALIST AGENTS (V1: ONLY 6)</text>
+
+        <g>
+          <rect x="40" y="316" width="120" height="64" fill="#f5f1e8" stroke="#2a221a"/>
+          <text x="100" y="338" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1612">Brief Parser</text>
+          <text x="100" y="354" text-anchor="middle" font-size="9" fill="#44382a">Claude / GPT</text>
+          <text x="100" y="368" text-anchor="middle" font-size="9" fill="#44382a">→ shot list</text>
+        </g>
+        <g>
+          <rect x="172" y="316" width="120" height="64" fill="#f5f1e8" stroke="#2a221a"/>
+          <text x="232" y="338" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1612">Identity Lock</text>
+          <text x="232" y="354" text-anchor="middle" font-size="9" fill="#44382a">Flux + IP-Adapter</text>
+          <text x="232" y="368" text-anchor="middle" font-size="9" fill="#44382a">→ char ref</text>
+        </g>
+        <g>
+          <rect x="304" y="316" width="120" height="64" fill="#f5f1e8" stroke="#2a221a"/>
+          <text x="364" y="338" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1612">Scene Renderer</text>
+          <text x="364" y="354" text-anchor="middle" font-size="9" fill="#44382a">Runway / Kling</text>
+          <text x="364" y="368" text-anchor="middle" font-size="9" fill="#44382a">→ video clips</text>
+        </g>
+        <g>
+          <rect x="436" y="316" width="120" height="64" fill="#f5f1e8" stroke="#2a221a"/>
+          <text x="496" y="338" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1612">Voice / Dub</text>
+          <text x="496" y="354" text-anchor="middle" font-size="9" fill="#44382a">Sarvam / ElevenLabs</text>
+          <text x="496" y="368" text-anchor="middle" font-size="9" fill="#44382a">→ multilingual VO</text>
+        </g>
+        <g>
+          <rect x="568" y="316" width="120" height="64" fill="#f5f1e8" stroke="#2a221a"/>
+          <text x="628" y="338" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1612">Editor / Mux</text>
+          <text x="628" y="354" text-anchor="middle" font-size="9" fill="#44382a">FFmpeg + Remotion</text>
+          <text x="628" y="368" text-anchor="middle" font-size="9" fill="#44382a">→ aspect variants</text>
+        </g>
+        <g>
+          <rect x="700" y="316" width="140" height="64" fill="#f5f1e8" stroke="#2a221a" stroke-width="2"/>
+          <text x="770" y="338" text-anchor="middle" font-size="11" font-weight="700" fill="#7c2d12">Critique / QA</text>
+          <text x="770" y="354" text-anchor="middle" font-size="9" fill="#44382a">Claude judge</text>
+          <text x="770" y="368" text-anchor="middle" font-size="9" fill="#7c2d12">→ pass / regen</text>
+        </g>
+
+        <line x1="440" y1="380" x2="440" y2="410" stroke="#44382a" stroke-width="1.5" marker-end="url(#arr)"/>
+
+        <!-- Layer 4: Storage / infra -->
+        <text x="40" y="430" font-size="10" font-weight="700" letter-spacing="2" fill="#c2410c">04 · INFRA &amp; DATA</text>
+        <rect x="40" y="440" width="240" height="56" fill="#ebe5d4" stroke="#2a221a"/>
+        <text x="160" y="462" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1612">Supabase (Postgres)</text>
+        <text x="160" y="478" text-anchor="middle" font-size="10" fill="#44382a">Jobs · briefs · audit trail</text>
+
+        <rect x="300" y="440" width="240" height="56" fill="#ebe5d4" stroke="#2a221a"/>
+        <text x="420" y="462" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1612">Cloudflare R2</text>
+        <text x="420" y="478" text-anchor="middle" font-size="10" fill="#44382a">Assets · references · finished work</text>
+
+        <rect x="560" y="440" width="240" height="56" fill="#ebe5d4" stroke="#2a221a"/>
+        <text x="680" y="462" text-anchor="middle" font-size="12" font-weight="600" fill="#1a1612">PostHog + Helicone</text>
+        <text x="680" y="478" text-anchor="middle" font-size="10" fill="#44382a">Product analytics · LLM cost tracking</text>
+
+        <!-- Footer note -->
+        <line x1="40" y1="514" x2="840" y2="514" stroke="#2a221a" stroke-width="0.5"/>
+        <text x="440" y="528" text-anchor="middle" font-size="10" font-style="italic" fill="#44382a">Defensibility lives in the orange box (QA agent) and the workflow, not in any single model. Foundation models are interchangeable.</text>
+      </svg>
+    </div>
+
+    <h4>Tooling shortlist (real APIs, real prices)</h4>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Primary choice</th>
+          <th>Backup</th>
+          <th>Why</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Orchestration</td><td>LangGraph</td><td>CrewAI</td><td>Stateful, replayable, MIT-licensed</td></tr>
+        <tr><td>LLM (planning + critique)</td><td>Claude Sonnet 4.6</td><td>GPT-5</td><td>Critique quality, structured output</td></tr>
+        <tr><td>Image gen</td><td>Flux 1.1 Pro (via fal.ai)</td><td>Ideogram</td><td>Identity-lock via IP-Adapter</td></tr>
+        <tr><td>Video gen</td><td>Runway Gen-4 / Kling (via fal.ai)</td><td>Pika, Luma</td><td>Multi-vendor to dodge price hikes</td></tr>
+        <tr><td>TTS / dub (Indian languages)</td><td>Sarvam AI</td><td>ElevenLabs Multilingual v2</td><td>Sarvam is genuinely India-tuned</td></tr>
+        <tr><td>Lip-sync</td><td>Sync Labs API</td><td>Wav2Lip (self-host)</td><td>Required for presenter ads</td></tr>
+        <tr><td>Audio / music</td><td>ElevenLabs SFX, Suno API</td><td>Royalty-free libs</td><td>Commercial-licensed only</td></tr>
+        <tr><td>Compositing</td><td>Remotion + FFmpeg</td><td>—</td><td>Programmatic, deterministic</td></tr>
+        <tr><td>App layer</td><td>Next.js + Supabase</td><td>—</td><td>Standard, fast to ship</td></tr>
+        <tr><td>Storage / CDN</td><td>Cloudflare R2</td><td>—</td><td>No egress fees vs S3</td></tr>
+        <tr><td>Cost telemetry</td><td>Helicone</td><td>Custom</td><td>Per-job margin visibility — non-negotiable</td></tr>
+        <tr><td>Payments / GST</td><td>Razorpay</td><td>—</td><td>Indian invoicing baked in</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Section 7 -->
+  <section id="s7">
+    <span class="section-num">§ 07</span>
+    <h2>The 18 agents — what's <em>real</em>, what's marketing</h2>
+    <p>The original brief listed every imaginable role from "story writer" to "director" to "critique." Most of those are not separate agents — they're prompts. Here's the honest taxonomy:</p>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Agent</th>
+          <th>Real specialization?</th>
+          <th>What it actually is</th>
+          <th>In v1?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Story / Script Writer</td><td><span class="pill pill-good">Real</span></td><td>LLM with structured beat-sheet prompt</td><td>Yes (light)</td></tr>
+        <tr><td>Logline / Hook Generator</td><td><span class="pill pill-good">Real</span></td><td>LLM with platform-specific style guide</td><td>Yes</td></tr>
+        <tr><td>Character Designer</td><td><span class="pill pill-good">Real (hard)</span></td><td>Image gen + IP-Adapter or LoRA for identity lock</td><td>Yes — core wedge</td></tr>
+        <tr><td>World / Scene Builder</td><td><span class="pill pill-good">Real</span></td><td>Background gen + style locking</td><td>Yes</td></tr>
+        <tr><td>Storyboard / Shot Planner</td><td><span class="pill pill-good">Real</span></td><td>LLM converts script → shot list with camera + duration</td><td>Yes</td></tr>
+        <tr><td>Screenplay Formatter</td><td><span class="pill pill-kill">Marketing</span></td><td>Trivial template fill — not its own agent</td><td>No</td></tr>
+        <tr><td>Cinematographer</td><td><span class="pill pill-kill">Marketing</span></td><td>Camera prompts inside shot list</td><td>No (folded in)</td></tr>
+        <tr><td>Director</td><td><span class="pill pill-kill">Marketing</span></td><td>This is just the orchestrator agent</td><td>It's the orchestrator</td></tr>
+        <tr><td>Voice / Dialogue Actor</td><td><span class="pill pill-good">Real</span></td><td>Multilingual TTS + emotion + voice clone</td><td>Yes — core wedge</td></tr>
+        <tr><td>Foley / SFX</td><td><span class="pill pill-good">Real</span></td><td>Audio gen + sync</td><td>v2</td></tr>
+        <tr><td>Music Composer</td><td><span class="pill pill-good">Real</span></td><td>Suno / Udio API</td><td>v2</td></tr>
+        <tr><td>Editor / Pacer</td><td><span class="pill pill-good">Real</span></td><td>Cut planning + timing + transitions</td><td>Yes</td></tr>
+        <tr><td>Color Grader</td><td><span class="pill pill-warn">Commodity</span></td><td>LUT application</td><td>v2</td></tr>
+        <tr><td>VFX</td><td><span class="pill pill-good">Real (expensive)</span></td><td>Compositing, particles</td><td>v3+</td></tr>
+        <tr><td>Subtitler / Translator</td><td><span class="pill pill-good">Real, India-critical</span></td><td>Multilingual subs + timing</td><td>Yes</td></tr>
+        <tr><td>Critique / QA Judge</td><td><span class="pill pill-good">Real, underserved</span></td><td>LLM-as-judge against brand rubric — quality gate</td><td>Yes — defensibility</td></tr>
+        <tr><td>Distribution / Hook Optimizer</td><td><span class="pill pill-good">Real</span></td><td>Platform-specific reformat</td><td>Yes (light)</td></tr>
+        <tr><td>Continuity Checker</td><td><span class="pill pill-good">Real, underserved</span></td><td>Cross-shot character/object consistency</td><td>Yes — folds into Identity Lock</td></tr>
+        <tr><td>Compliance / Safety Reviewer</td><td><span class="pill pill-good">Real</span></td><td>AI-label enforcement, copyright pre-check</td><td>v2</td></tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      <span class="callout-label">Honest takeaway</span>
+      The "18 specialist agents" framing is mostly marketing. v1 needs <strong>6 actual agents</strong>: Brief Parser, Identity Lock, Scene Renderer, Voice/Dub, Editor/Mux, Critique/QA. The rest are prompts inside those, or v2/v3 features.
+    </div>
+  </section>
+
+  <!-- Section 8 -->
+  <section id="s8">
+    <span class="section-num">§ 08</span>
+    <h2>Pricing &amp; unit economics</h2>
+    <p>Per-use, credit-based. Customer buys credits monthly; each finished asset consumes a defined number based on length × complexity × language count.</p>
+    <h4>Pricing tiers (v1)</h4>
+    <table class="tbl">
+      <thead>
+        <tr>
+          <th>Tier</th>
+          <th>Credits / mo</th>
+          <th>~Assets / mo</th>
+          <th>Price</th>
+          <th>Effective ₹/asset</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Starter</td><td>20</td><td>~10–15</td><td>₹4,999</td><td>₹333–₹500</td></tr>
+        <tr><td>Studio</td><td>80</td><td>~50–60</td><td>₹14,999</td><td>₹250–₹300</td></tr>
+        <tr><td>Agency</td><td>240</td><td>~160–180</td><td>₹39,999</td><td>₹220–₹250</td></tr>
+        <tr><td>Custom / pay-as-you-go</td><td>—</td><td>—</td><td>₹400/asset</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <h4>Per-asset COGS estimate (15-second ad, 1 language, 1 aspect)</h4>
+    <table class="tbl">
+      <thead><tr><th>Cost line</th><th>Calls</th><th>Approx ₹</th></tr></thead>
+      <tbody>
+        <tr><td>LLM (brief parse + critique)</td><td>4–8</td><td>₹6–₹15</td></tr>
+        <tr><td>Image gen (identity lock + scene refs)</td><td>4–10</td><td>₹15–₹40</td></tr>
+        <tr><td>Video gen (Runway / Kling, 4s × 4 clips)</td><td>4</td><td>₹80–₹180</td></tr>
+        <tr><td>TTS / dub</td><td>1</td><td>₹4–₹12</td></tr>
+        <tr><td>Lip-sync</td><td>1</td><td>₹15–₹40</td></tr>
+        <tr><td>Compute / storage / bandwidth</td><td>—</td><td>₹2–₹6</td></tr>
+        <tr><td><strong>Total</strong></td><td></td><td><strong>₹122–₹293</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="callout warn">
+      <span class="callout-label">Margin reality</span>
+      At Studio tier, ₹250–₹300 / asset price vs ₹122–₹293 COGS is razor-thin. <strong>I do not have a healthy SaaS margin until I either drive COGS down (caching, multi-vendor routing, fixed-rate compute) or move customers up to Agency tier.</strong> The Critique/QA agent is the lever — if it cuts regenerations by 50%, my margin doubles.
+    </div>
+  </section>
+
+  <!-- Section 9 -->
+  <section id="s9">
+    <span class="section-num">§ 09</span>
+    <h2>Bootstrap cost — line by line</h2>
+    <div class="cost-grid">
+      <div class="cost-card">
+        <h5>Months 1–3 / build</h5>
+        <span class="num">₹70k–₹1.4L</span>
+        <div class="sub">total over 3 months — domain, infra, API testing, GST registration, LLP fees</div>
+      </div>
+      <div class="cost-card">
+        <h5>Months 4–6 / pilot</h5>
+        <span class="num">₹1.5–3L</span>
+        <div class="sub">total — first 5 paying agencies at deep discount, infra scales with usage</div>
+      </div>
+      <div class="cost-card">
+        <h5>Months 7–12 / scale-let</h5>
+        <span class="num">₹3–6L</span>
+        <div class="sub">total — part-time engineer, real marketing, slightly more infra. Should be ≥ break-even by M10.</div>
+      </div>
+      <div class="cost-card">
+        <h5>Total cash at risk</h5>
+        <span class="num">₹6–10L</span>
+        <div class="sub">over 12 months. Within reach without touching Bengaluru land or rental capital.</div>
+      </div>
+    </div>
+
+    <h4>Detailed monthly run-rate</h4>
+    <table class="tbl">
+      <thead>
+        <tr><th>Line item</th><th>M1–3</th><th>M4–6</th><th>M7–12</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>LLM APIs (Claude/GPT)</td><td>₹5k–₹15k</td><td>₹15k–₹40k</td><td>₹40k–₹1.2L</td></tr>
+        <tr><td>Video gen API (Runway/Kling/Pika)</td><td>₹10k–₹30k</td><td>₹30k–₹80k</td><td>₹80k–₹2.5L</td></tr>
+        <tr><td>Image gen (Flux/Ideogram)</td><td>₹3k</td><td>₹8k</td><td>₹20k</td></tr>
+        <tr><td>Voice (Sarvam + ElevenLabs)</td><td>₹3k</td><td>₹10k</td><td>₹30k–₹60k</td></tr>
+        <tr><td>Lip-sync API</td><td>₹0–₹5k</td><td>₹10k</td><td>₹25k</td></tr>
+        <tr><td>Hosting (Vercel + Supabase + R2)</td><td>₹2k</td><td>₹6k</td><td>₹15k–₹30k</td></tr>
+        <tr><td>Helicone + PostHog + Sentry</td><td>₹0 (free tiers)</td><td>₹2k</td><td>₹6k</td></tr>
+        <tr><td>LLP setup, GST, accountant</td><td>₹15k one-time + ₹3k/mo</td><td>₹3k</td><td>₹3k</td></tr>
+        <tr><td>Razorpay fees (~2%)</td><td>—</td><td>₹2k</td><td>₹15k</td></tr>
+        <tr><td>Part-time engineer</td><td>—</td><td>—</td><td>₹40k–₹80k</td></tr>
+        <tr><td>Marketing (LinkedIn ads, events)</td><td>—</td><td>₹10k</td><td>₹25k–₹50k</td></tr>
+        <tr><td><strong>Monthly total</strong></td><td><strong>₹25k–₹70k</strong></td><td><strong>₹95k–₹1.7L</strong></td><td><strong>₹3L–₹6L</strong></td></tr>
+      </tbody>
+    </table>
+    <p>Note that M7–M12 spend assumes <em>matched revenue</em> — these costs scale with paid usage. If revenue doesn't show up, I cut here, not bleed.</p>
+  </section>
+
+  <!-- Section 10 -->
+  <section id="s10">
+    <span class="section-num">§ 10</span>
+    <h2>Commercial &amp; operational challenges</h2>
+    <h3>Commercial</h3>
+    <ul>
+      <li><strong>Variable COGS.</strong> Foundation-model price changes can wreck margin overnight. Mitigation: multi-vendor routing, hard per-job budget caps, weekly margin review.</li>
+      <li><strong>Customer concentration risk.</strong> First 5 customers will be 80% of revenue. One leaves, I lose 20% MRR.</li>
+      <li><strong>Long sales cycles even for SMB.</strong> Indian agencies negotiate. Expect 3–6 weeks from intro to first paid asset.</li>
+      <li><strong>Credit hoarding / breakage.</strong> Customers buy big tier, use little. Looks like good revenue but is actually deferred liability. Need a credit-expiry policy.</li>
+      <li><strong>Outcome attribution.</strong> If my asset performs badly in a Meta ad, the agency blames the tool, not the targeting. Need hooks for client to tag wins.</li>
+      <li><strong>White-label pressure.</strong> Agencies will ask to put their logo on my output. Yes for Agency tier; no for Starter / Studio.</li>
+    </ul>
+    <h3>Operational</h3>
+    <ul>
+      <li><strong>Quality variance.</strong> Same prompt, different runs, different outputs. Will frustrate B2B customers expecting deterministic delivery. The Critique/QA agent is my answer.</li>
+      <li><strong>Support load.</strong> "Why does my mascot's nose change shape in scene 2?" — this is a real ticket I'll get on day one. Need a clear regenerate-credit policy.</li>
+      <li><strong>Indian language QA.</strong> Telugu lip-sync is harder than English. I'll need 2–3 native QA reviewers per language at some volume. Solvable but not free.</li>
+      <li><strong>Compliance.</strong> Meta's AI-content disclosure rules, India's DPDP Act for stored customer assets, IT Act 2000 intermediary obligations. Get a CA + a lawyer's 1-hour review before launch.</li>
+      <li><strong>Founder concentration.</strong> If I'm hit by a bus, the business stops. Must document SOPs from day 1.</li>
+      <li><strong>Time arbitrage with day job.</strong> vidaXL has IP / moonlighting policies. <em>Read the contract this week.</em> Likely fine because this is non-competing, but verify in writing.</li>
+    </ul>
+  </section>
+
+  <!-- Section 11 -->
+  <section id="s11">
+    <span class="section-num">§ 11</span>
+    <h2>Competition I have to beat or sidestep</h2>
+    <table class="tbl">
+      <thead><tr><th>Player</th><th>What they're good at</th><th>How I sidestep</th></tr></thead>
+      <tbody>
+        <tr><td>HeyGen, Synthesia</td><td>Talking-head avatars at scale</td><td>I'm not doing avatars. I'm doing brand-mascot consistency.</td></tr>
+        <tr><td>Invideo AI, DeeVid, RoboNeo</td><td>End-to-end "prompt → video"</td><td>They're horizontal. I'm vertical on Indian SMB ad shops with regional language as the wedge.</td></tr>
+        <tr><td>Opus Clip, Captions, Submagic</td><td>Long-form to shorts editing</td><td>Different problem. Not my space.</td></tr>
+        <tr><td>LTX Studio, Showrunner, Sora</td><td>Cinematic / narrative</td><td>Different customer (creators, hobbyists). I'm B2B SMB.</td></tr>
+        <tr><td>Sarvam AI, Vitra.ai, Murf</td><td>Indian-language TTS / dubbing</td><td>I use them as suppliers. Not competitors at the workflow layer.</td></tr>
+        <tr><td>Pixis, Rocketium</td><td>India enterprise creative automation</td><td>They're enterprise. I'm SMB. Different sales motion.</td></tr>
+        <tr><td>In-house freelancers, fiverr/upwork</td><td>Hand-built ads</td><td>I'm 5–10× cheaper and 5× faster. I lose on bespoke quality. Win on volume.</td></tr>
+      </tbody>
+    </table>
+    <p>None of these are existential. The existential threat is <em>OpenAI / Google / Meta releasing a free or near-free vertical-localized creative tool</em>. That's a Year-2 risk, not Year-1.</p>
+  </section>
+
+  <!-- Section 12 -->
+  <section id="s12">
+    <span class="section-num">§ 12</span>
+    <h2>Risks &amp; how each one kills me</h2>
+    <table class="tbl">
+      <thead><tr><th>Risk</th><th>Likelihood</th><th>Lethality</th><th>Early signal</th></tr></thead>
+      <tbody>
+        <tr><td>Foundation video model price hike</td><td><span class="pill pill-warn">Medium</span></td><td><span class="pill pill-warn">High</span></td><td>Watch fal.ai pricing weekly</td></tr>
+        <tr><td>Quality variance frustrates customers</td><td><span class="pill pill-kill">High</span></td><td><span class="pill pill-warn">Medium</span></td><td>NPS drop, regen rate &gt; 30%</td></tr>
+        <tr><td>OpenAI / Google ships India-localised creative tool</td><td><span class="pill pill-warn">Medium</span></td><td><span class="pill pill-kill">Existential</span></td><td>Their I/O / DevDay announcements</td></tr>
+        <tr><td>I burn out trying to do this on weekends</td><td><span class="pill pill-warn">Medium</span></td><td><span class="pill pill-kill">Existential to me, not the idea</span></td><td>Missing 2 weekly check-ins in a row</td></tr>
+        <tr><td>vidaXL contract conflict</td><td><span class="pill pill-good">Low</span></td><td><span class="pill pill-kill">Existential</span></td><td>Contract review in week 1</td></tr>
+        <tr><td>Copyright suit on training data flows downstream</td><td><span class="pill pill-good">Low (1 yr horizon)</span></td><td><span class="pill pill-warn">Medium</span></td><td>Watch Sora / Runway lawsuit news</td></tr>
+        <tr><td>Per-use customers churn after one campaign</td><td><span class="pill pill-warn">Medium</span></td><td><span class="pill pill-warn">Medium</span></td><td>M2 retention &lt; 50%</td></tr>
+        <tr><td>Margin permanently negative at Starter tier</td><td><span class="pill pill-warn">Medium</span></td><td><span class="pill pill-warn">Medium</span></td><td>Helicone dashboard month 4</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Section 13 -->
+  <section id="s13">
+    <span class="section-num">§ 13</span>
+    <h2>Roadmap — Y1, Y2, Y3</h2>
+    <h4>Year 1 — survive and prove</h4>
+    <ul>
+      <li><strong>M1–M3:</strong> Build MVP. 6 agents. One ICP (Hyderabad ad shops). Sign 3 design partners at ₹0 in exchange for case studies.</li>
+      <li><strong>M4–M6:</strong> Convert design partners to paid. Onboard 5 more agencies. Launch Studio + Agency tiers.</li>
+      <li><strong>M7–M9:</strong> 15–25 paying customers. Hit ₹3–5L MRR. Hire 1 part-time engineer.</li>
+      <li><strong>M10–M12:</strong> 30–50 paying customers. ₹6–10L MRR. Cash-positive month-on-month.</li>
+    </ul>
+    <h4>Year 2 — expand the wedge</h4>
+    <ul>
+      <li>Add D2C performance brands as second ICP.</li>
+      <li>Expand language coverage to 8 Indian + 4 SE Asian.</li>
+      <li>Build the "creator channel" idea — but only as a marketing flywheel, not a separate venture. Use it to publish demos in regional languages.</li>
+      <li>Consider raising a small angel round (₹2–4 cr) <em>only</em> if growth data supports it.</li>
+    </ul>
+    <h4>Year 3 — defend or exit</h4>
+    <ul>
+      <li>Defensibility audit. If the QA layer + workflow + India language tuning is real moat, raise seed.</li>
+      <li>If foundation models have caught up and commoditised the space, sell to a creative-tools company or wind down with dignity.</li>
+      <li>Either way, do not pretend year 3 is still year 1.</li>
+    </ul>
+  </section>
+
+  <!-- Section 14 -->
+  <section id="s14">
+    <span class="section-num">§ 14</span>
+    <h2>Kill criteria — when I walk away</h2>
+    <p>Pre-committing these because future-me will be motivated to ignore the data.</p>
+    <ol>
+      <li><strong>Month 4:</strong> If I do not have at least 3 unpaid design partners using the product weekly, kill.</li>
+      <li><strong>Month 6:</strong> If I do not have at least 5 paying customers (≥ ₹4,999/mo each), kill.</li>
+      <li><strong>Month 9:</strong> If MRR &lt; ₹2L or gross margin &lt; 30%, pause and re-architect; if both fail, kill.</li>
+      <li><strong>Month 12:</strong> If MRR &lt; ₹6L or I am routinely working &gt;20 hrs/week on this, kill or sell.</li>
+      <li><strong>Anytime:</strong> If a major foundation-model vendor ships an India-localised creative agent that does 80% of what I do at &lt; ₹0.5/asset, accept and exit gracefully.</li>
+      <li><strong>Anytime:</strong> If my day-job performance reviews drop a tier — kill. The salary is the foundation, not the side hustle.</li>
+    </ol>
+    <div class="callout kill">
+      <span class="callout-label">Promise to myself</span>
+      I will treat these kill criteria as data, not as failure. The point of this venture is optionality, not validation of my ego.
+    </div>
+  </section>
+
+  <!-- Section 15 -->
+  <section id="s15">
+    <span class="section-num">§ 15</span>
+    <h2>Decision against my <em>own</em> filters</h2>
+    <p>From <code>06_side_ventures.md</code>. Honest scoring of the narrow wedge — not the broad version.</p>
+    <table class="tbl">
+      <thead><tr><th>Filter</th><th>Score</th><th>Reasoning</th></tr></thead>
+      <tbody>
+        <tr><td>Deployable alongside demanding day job</td><td><span class="dot dot-m"></span> Conditional</td><td>Yes if I stay disciplined on scope. No if I let it sprawl.</td></tr>
+        <tr><td>Real regulatory path</td><td><span class="dot dot-y"></span> Yes</td><td>LLP + GST + DPDP Act compliance + Meta/YouTube AI labels. Clear, not gray.</td></tr>
+        <tr><td>Unit economics make sense at small scale</td><td><span class="dot dot-m"></span> Tight</td><td>Margin is razor-thin at Starter, healthy at Agency. Need price discipline.</td></tr>
+        <tr><td>Leverages my strengths</td><td><span class="dot dot-y"></span> Yes (mostly)</td><td>Product thinking, program management, content/playbook chops directly apply. SFCC e-commerce knowledge tangentially useful for D2C ICP later.</td></tr>
+        <tr><td>Path to genuine passive component</td><td><span class="dot dot-m"></span> Yes by Y2</td><td>SaaS subscription is the passive layer. Agentic delivery + SOPs make it semi-autonomous.</td></tr>
+      </tbody>
+    </table>
+    <div class="verdict">
+      <h3>Soft yes on the narrow wedge. Hard no on the broad vision.</h3>
+      <p>I will commit ₹6–10L of cash and 12–15 hrs/week of time over 12 months to test the Studio Tantra wedge. I will <strong>not</strong> rebuild this as the broad "AI movie studio" until and unless the narrow version is pulling ≥ ₹6L MRR with healthy margin and I have a real co-founder or first hire to expand it.</p>
+      <p>The bar to graduate from "narrow wedge" to "broad platform" is not ambition — it's traction. If the wedge doesn't earn the right to expand, the expansion doesn't happen.</p>
+    </div>
+  </section>
+
+  <!-- Section 16 -->
+  <section id="s16">
+    <span class="section-num">§ 16</span>
+    <h2>Open questions I haven't answered</h2>
+    <ol>
+      <li>What does my vidaXL employment contract actually say about side ventures? <strong>Read it this week.</strong></li>
+      <li>Do I incorporate as LLP or Pvt Ltd? LLP is cheaper to maintain; Pvt Ltd is needed if I ever raise. <em>Decision: LLP for v1, convert later if needed.</em></li>
+      <li>Who's the technical co-founder or first hire I'd need by Month 6? Do I have anyone in mind?</li>
+      <li>How do I price design-partner trials so they feel obligated to convert without being ripped off?</li>
+      <li>Is "Studio Tantra" a name that survives a trademark search and a non-Indian audience? (Probably not — bikeshed later.)</li>
+      <li>What's the single experiment I can run in week 1 that disproves this fastest? <em>Hypothesis: 5 cold LinkedIn DMs to ad agency founders asking "would you pay ₹15k/mo for this." If 0 reply, that's signal.</em></li>
+      <li>Where does the "build my own creator channel for global UGC" idea fit? <strong>Year 2 only, and only as marketing — not as a separate revenue line.</strong></li>
+    </ol>
+  </section>
+
+  <footer>
+    <span>v0.1 · Strategy memo · Studio Tantra (working name)</span>
+    <span>Next review: 30 days · Decide: 90 days · Kill / scale: 180 days</span>
+  </footer>
+
+</div>
+</body>
+</html>
